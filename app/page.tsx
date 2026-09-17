@@ -1,557 +1,665 @@
+
 "use client";
 
-import Image from "next/image";
+import { useState } from "react";
 import {
-  ArrowUpRight,
-  ArrowRight,
   Instagram,
   MapPin,
   Phone,
-  Star,
   Send,
   Clock,
+  ArrowUpLeft,
+  Sparkles,
+  Scissors,
+  Palette,
+  Heart,
+  Menu,
+  X,
 } from "lucide-react";
-import Reveal from "@/components/Reveal";
-import { useState } from "react";
+
+type Language = "fa" | "en";
+
+const images = {
+  hero:
+    "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1800&q=85",
+  color:
+    "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1000&q=85",
+  makeup:
+    "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1000&q=85",
+  styling:
+    "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1000&q=85",
+  beauty:
+    "https://images.unsplash.com/photo-1487412912498-0447578fcca8?auto=format&fit=crop&w=1000&q=85",
+};
 
 const content = {
   fa: {
-    nav: ["خانه", "خدمات", "درباره ما", "گالری", "تماس"],
-    brand: "سالن زیبایی طناز مردانی",
-    eyebrow: "سالن زیبایی طناز مردانی",
-    heroTitle: "زیبایی،",
-    heroTitle2: "به سبک تو.",
+    nav: {
+      home: "خانه",
+      services: "خدمات",
+      about: "درباره ما",
+      gallery: "نمونه کارها",
+      contact: "تماس با ما",
+    },
+    heroEyebrow: "سالن زیبایی طناز مردانی",
+    heroTitle: "زیبایی تو،\nبا امضای طناز",
     heroText:
-      "اینجا زیبایی فقط یک نتیجه نیست؛ تجربه‌ای آرام، حرفه‌ای و متناسب با چهره و سلیقه شماست.",
-    book: "رزرو نوبت",
-    galleryBtn: "مشاهده نمونه کارها",
-
-    features: [
-      ["۰۱", "تخصص و دقت", "هر خدمات با توجه به چهره، سلیقه و خواسته شما انجام می‌شود."],
-      ["۰۲", "کیفیت و ظرافت", "توجه به جزئیات و استفاده از تکنیک‌های حرفه‌ای زیبایی."],
-      ["۰۳", "تجربه آرام", "محیطی صمیمی و آرام برای داشتن یک تجربه متفاوت از زیبایی."],
-    ],
-
-    servicesLabel: "خدمات ما",
-    servicesTitle: "زیبایی با",
-    servicesTitle2: "امضای طناز",
+      "اینجا جایی‌ست برای تغییر، آرامش و تجربه‌ای متفاوت از زیبایی. خدمات تخصصی مو، میکاپ و زیبایی با توجه به فرم چهره، استایل و سلیقه شما.",
+    primary: "رزرو وقت",
+    secondary: "مشاهده خدمات",
+    badge: "زیبایی با ظرافت و تخصص",
+    servicesEyebrow: "خدمات تخصصی",
+    servicesTitle: "برای هر زیبایی،\nیک انتخاب دقیق",
     servicesText:
-      "مجموعه‌ای از خدمات تخصصی زیبایی با تمرکز بر ظرافت، کیفیت و نتیجه‌ای طبیعی و ماندگار.",
-
+      "در سالن طناز، هر خدمات با مشاوره و توجه به ویژگی‌های چهره، مو و سبک شخصی شما انجام می‌شود.",
     services: [
-      ["۰۱", "رنگ و مش", "رنگ، هایلایت، بالیاژ، آمبره و تکنیک‌های تخصصی رنگ مو."],
-      ["۰۲", "کوتاهی و براشینگ", "کوتاهی حرفه‌ای، فرم‌دهی، براشینگ و استایل مو."],
-      ["۰۳", "میکاپ", "میکاپ حرفه‌ای برای مهمانی، مراسم و مناسبت‌های خاص."],
-      ["۰۴", "شینیون", "شینیون و استایل مو متناسب با چهره و نوع مراسم."],
-      ["۰۵", "خدمات ابرو و مژه", "زیبایی و فرم‌دهی ابرو و مژه با ظرافت و دقت."],
-      ["۰۶", "خدمات ناخن", "خدمات زیبایی ناخن با طراحی‌های ظریف و مدرن."],
+      {
+        icon: Palette,
+        title: "رنگ و احیای مو",
+        text:
+          "رنگ، لایت، آمبره و تکنیک‌های اصلاح رنگ همراه با توجه به سلامت و کیفیت مو.",
+      },
+      {
+        icon: Scissors,
+        title: "کوتاهی و براشینگ",
+        text:
+          "کوتاهی متناسب با فرم صورت، براشینگ حرفه‌ای و حالت‌دهی برای استایل روزمره یا مهمانی.",
+      },
+      {
+        icon: Sparkles,
+        title: "میکاپ",
+        text:
+          "میکاپ ظریف و حرفه‌ای متناسب با چهره، سبک مراسم و سلیقه شخصی شما.",
+      },
+      {
+        icon: Heart,
+        title: "شینیون و استایل مو",
+        text:
+          "شینیون و استایل مو برای مهمانی، عقد و مراسم با طراحی متناسب با فرم چهره و لباس.",
+      },
+      {
+        icon: Sparkles,
+        title: "ابرو و مژه",
+        text:
+          "اصلاح فرم ابرو و خدمات مژه با هدف ایجاد تناسب طبیعی و مرتب‌تر شدن چهره.",
+      },
+      {
+        icon: Heart,
+        title: "خدمات ناخن",
+        text:
+          "مانیکور و طراحی ناخن با سبک‌های ظریف و مینیمال برای یک ظاهر کامل و آراسته.",
+      },
     ],
-
-    storyLabel: "درباره طناز بیوتی",
-    storyTitle: "زیبایی یعنی",
-    storyTitle2: "خودت باشی.",
-    storyText:
-      "در سالن زیبایی طناز مردانی تلاش می‌کنیم زیبایی طبیعی هر فرد را بهتر نمایان کنیم. هدف ما خلق ظاهری زیبا و در عین حال هماهنگ با شخصیت و سلیقه شماست.",
-
-    galleryLabel: "نمونه کارها",
-    galleryTitle: "دنیای",
-    galleryTitle2: "زیبایی ما",
-
-    review:
-      "«تجربه‌ای فوق‌العاده بود. نتیجه دقیقاً چیزی شد که می‌خواستم؛ ظریف، زیبا و کاملاً متناسب با چهره‌ام.»",
-
-    readyLabel: "برای زیبایی بعدی آماده‌ای؟",
-    readyTitle: "نوبت زیبایی",
-    readyTitle2: "خودت را رزرو کن.",
-    phoneBtn: "تماس با سالن",
-    telegramBtn: "رزرو نوبت در تلگرام",
-
-    visit: "آدرس سالن",
-    contact: "تماس",
-    hours: "ساعات کاری",
-    hoursText: "شنبه تا پنجشنبه",
-    hoursTime: "۱۰:۰۰ تا ۲۰:۰۰",
-    instagram: "اینستاگرام",
-    telegram: "ربات نوبت‌دهی",
+    aboutEyebrow: "درباره سالن طناز",
+    aboutTitle: "زیبایی فقط ظاهر نیست؛\nحسی است که با خودت می‌بری.",
+    aboutText:
+      "ما باور داریم یک تجربه خوب زیبایی از لحظه‌ای شروع می‌شود که شنیده می‌شوید. در سالن زیبایی طناز مردانی، قبل از هر خدمات به فرم چهره، جنس مو، سبک زندگی و چیزی که واقعاً دوست دارید توجه می‌کنیم.",
+    aboutText2:
+      "هدف ما این است که نتیجه نهایی فقط زیبا نباشد؛ بلکه با شخصیت و استایل شما هماهنگ باشد و وقتی سالن را ترک می‌کنید، احساس کنید بهترین نسخه خودتان را می‌بینید.",
+    aboutButton: "آشنایی بیشتر",
+    galleryEyebrow: "نمونه کارها",
+    galleryTitle: "جزئیات، تفاوت را می‌سازند.",
+    galleryText:
+      "بخشی از حال‌وهوای زیبایی و ظرافتی که در سالن طناز تجربه خواهید کرد.",
+    bookingEyebrow: "رزرو وقت",
+    bookingTitle: "برای یک تغییر زیبا،\nاز همین‌جا شروع کن.",
+    bookingText:
+      "برای هماهنگی وقت و دریافت اطلاعات بیشتر، از طریق تلگرام با ما در ارتباط باشید یا با سالن تماس بگیرید.",
+    telegram: "رزرو از طریق تلگرام",
+    call: "تماس با سالن",
+    addressTitle: "آدرس سالن",
+    address:
+      "سپاهانشهر، بلوار غدیر، مجتمع عقیق ۵، طبقه زیرین، انتهای راهرو، پلاک ۲۲",
+    phoneTitle: "شماره تماس",
+    instagramTitle: "اینستاگرام",
+    hoursTitle: "ساعات کاری",
+    hours: "با هماهنگی قبلی",
     footer:
-      "سالن زیبایی طناز مردانی؛ زیبایی حرفه‌ای، ظریف و متناسب با شما.",
+      "سالن زیبایی طناز مردانی؛ جایی برای زیبایی، آرامش و اعتماد به خود.",
+    language: "EN",
   },
 
   en: {
-    nav: ["Home", "Services", "About", "Gallery", "Contact"],
-    brand: "Tanaz Mardani Beauty Salon",
-    eyebrow: "Tanaz Mardani Beauty Salon",
-    heroTitle: "Beauty,",
-    heroTitle2: "your way.",
+    nav: {
+      home: "Home",
+      services: "Services",
+      about: "About",
+      gallery: "Gallery",
+      contact: "Contact",
+    },
+    heroEyebrow: "Tanaz Mardani Beauty Salon",
+    heroTitle: "Your beauty,\nwith Tanaz signature",
     heroText:
-      "Beauty is more than a result. It is a calm, professional experience created around you.",
-    book: "Book an appointment",
-    galleryBtn: "Explore our work",
-
-    features: [
-      ["01", "Precision", "Every service is tailored to your features, style and vision."],
-      ["02", "Quality", "Professional beauty techniques with thoughtful attention to detail."],
-      ["03", "Experience", "A calm and welcoming environment for a truly personal beauty experience."],
-    ],
-
-    servicesLabel: "Our services",
-    servicesTitle: "Beauty with",
-    servicesTitle2: "the Tanaz touch",
+      "A place for transformation, confidence and a refined beauty experience. Professional hair, makeup and beauty services tailored to your features and personal style.",
+    primary: "Book an Appointment",
+    secondary: "Explore Services",
+    badge: "Beauty with precision & elegance",
+    servicesEyebrow: "Our Services",
+    servicesTitle: "Thoughtful beauty,\nmade for you",
     servicesText:
-      "Professional beauty services focused on elegance, quality and naturally beautiful results.",
-
+      "Every service at Tanaz Beauty begins with attention to your features, hair condition and personal style.",
     services: [
-      ["01", "Hair Color", "Color, highlights, balayage, ombre and professional hair coloring."],
-      ["02", "Cut & Blow Dry", "Professional cuts, styling, blowouts and hair shaping."],
-      ["03", "Makeup", "Professional makeup for parties, events and special occasions."],
-      ["04", "Hair Styling", "Elegant hairstyles and updos tailored to your face and occasion."],
-      ["05", "Brows & Lashes", "Detailed brow and lash services designed to enhance your features."],
-      ["06", "Nails", "Elegant and modern nail services with refined designs."],
+      {
+        icon: Palette,
+        title: "Hair Color & Care",
+        text:
+          "Color, highlights, balayage and corrective techniques with special attention to hair health.",
+      },
+      {
+        icon: Scissors,
+        title: "Cut & Blow Dry",
+        text:
+          "Face-shape tailored cuts, professional blowouts and styling for everyday or special occasions.",
+      },
+      {
+        icon: Sparkles,
+        title: "Makeup",
+        text:
+          "Refined, professional makeup designed around your features, event and personal style.",
+      },
+      {
+        icon: Heart,
+        title: "Hair Styling",
+        text:
+          "Elegant updos and occasion styling designed to complement your face, outfit and event.",
+      },
+      {
+        icon: Sparkles,
+        title: "Brows & Lashes",
+        text:
+          "Natural-looking brow and lash services designed to create a balanced and polished appearance.",
+      },
+      {
+        icon: Heart,
+        title: "Nail Services",
+        text:
+          "Manicure and refined nail designs for a clean, elegant and complete look.",
+      },
     ],
-
-    storyLabel: "About Tanaz Beauty",
-    storyTitle: "Beauty means",
-    storyTitle2: "being yourself.",
-    storyText:
-      "At Tanaz Mardani Beauty Salon, we believe in enhancing your natural beauty. Our goal is to create a look that feels beautiful, authentic and completely yours.",
-
-    galleryLabel: "Our work",
-    galleryTitle: "Our beauty",
-    galleryTitle2: "world",
-
-    review:
-      "“An amazing experience. The result was exactly what I wanted — elegant, beautiful and perfectly suited to me.”",
-
-    readyLabel: "Ready for your next beauty experience?",
-    readyTitle: "Book your",
-    readyTitle2: "beauty appointment.",
-    phoneBtn: "Call the salon",
-    telegramBtn: "Book via Telegram",
-
-    visit: "Salon address",
-    contact: "Contact",
-    hours: "Opening hours",
-    hoursText: "Saturday to Thursday",
-    hoursTime: "10:00 AM – 8:00 PM",
-    instagram: "Instagram",
-    telegram: "Booking bot",
+    aboutEyebrow: "About Tanaz Beauty",
+    aboutTitle: "Beauty is more than appearance;\nit is how you feel.",
+    aboutText:
+      "We believe a great beauty experience begins with being truly heard. At Tanaz Mardani Beauty Salon, we consider your features, hair condition, lifestyle and personal preferences before every service.",
+    aboutText2:
+      "Our goal is not simply to make you look beautiful, but to create a result that feels naturally yours and gives you confidence when you leave the salon.",
+    aboutButton: "Discover More",
+    galleryEyebrow: "Our Work",
+    galleryTitle: "Details make the difference.",
+    galleryText:
+      "A glimpse into the elegance and beauty experience waiting for you at Tanaz Beauty.",
+    bookingEyebrow: "Book Your Visit",
+    bookingTitle: "Start your beautiful\ntransformation here.",
+    bookingText:
+      "For appointments and more information, contact us through Telegram or call the salon directly.",
+    telegram: "Book via Telegram",
+    call: "Call the Salon",
+    addressTitle: "Salon Address",
+    address:
+      "Sepahan Shahr, Ghadir Blvd, Aqiq 5 Complex, Lower Floor, End of Hallway, No. 22",
+    phoneTitle: "Phone",
+    instagramTitle: "Instagram",
+    hoursTitle: "Working Hours",
+    hours: "By appointment",
     footer:
-      "Tanaz Mardani Beauty Salon — professional beauty, refined and made for you.",
+      "Tanaz Mardani Beauty Salon — beauty, confidence and a moment for yourself.",
+    language: "FA",
   },
 };
 
-const gallery = [
-  {
-    src: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1400&q=90",
-    alt: "Hair styling",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1400&q=90",
-    alt: "Beauty makeup",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1400&q=90",
-    alt: "Makeup beauty",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1400&q=90",
-    alt: "Beauty salon",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1487412912498-0447578fcca8?auto=format&fit=crop&w=1400&q=90",
-    alt: "Beauty look",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1400&q=90",
-    alt: "Hair beauty",
-  },
-];
-
 export default function Home() {
-  const [lang, setLang] = useState<"fa" | "en">("fa");
-  const t = content[lang];
+  const [lang, setLang] = useState<Language>("fa");
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const isFa = lang === "fa";
+  const t = content[lang];
+
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+    });
+    setMenuOpen(false);
+  };
 
   return (
-    <main dir={isFa ? "rtl" : "ltr"} className="bg-ivory text-ink">
-      {/* NAVBAR */}
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-black/10 bg-ivory/90 backdrop-blur-md">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-10">
-          <a href="#" className="font-display text-xl tracking-[.12em]">
-            TANAZ <span className="text-gold">BEAUTY</span>
-          </a>
+    <main
+      dir={isFa ? "rtl" : "ltr"}
+      className="min-h-screen bg-[#fbfaf8] text-[#272321]"
+      style={{
+        fontFamily:
+          "Tahoma, Arial, sans-serif",
+      }}
+    >
+      {/* HEADER */}
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-black/5 bg-[#fbfaf8]/90 backdrop-blur-xl">
+        <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 md:px-8">
+          <button
+            onClick={() => scrollTo("home")}
+            className="text-right"
+          >
+            <div className="text-xl font-bold tracking-tight">
+              Tanaz Beauty
+            </div>
+            <div className="mt-0.5 text-[10px] tracking-[0.18em] text-[#9a8271]">
+              TANAZ MARDANI
+            </div>
+          </button>
 
-          <nav className="hidden items-center gap-7 md:flex">
-            {t.nav.map((item, index) => (
-              <a
-                key={item}
-                href={["#", "#services", "#story", "#gallery", "#contact"][index]}
-                className="text-[11px] transition hover:text-gold"
-              >
-                {item}
-              </a>
-            ))}
+          <nav className="hidden items-center gap-8 lg:flex">
+            <button onClick={() => scrollTo("home")} className="nav-link">
+              {t.nav.home}
+            </button>
+            <button onClick={() => scrollTo("services")} className="nav-link">
+              {t.nav.services}
+            </button>
+            <button onClick={() => scrollTo("about")} className="nav-link">
+              {t.nav.about}
+            </button>
+            <button onClick={() => scrollTo("gallery")} className="nav-link">
+              {t.nav.gallery}
+            </button>
+            <button onClick={() => scrollTo("contact")} className="nav-link">
+              {t.nav.contact}
+            </button>
           </nav>
 
           <div className="flex items-center gap-3">
             <button
               onClick={() => setLang(isFa ? "en" : "fa")}
-              className="rounded-full border border-black/15 px-4 py-2 text-[10px] font-medium"
+              className="rounded-full border border-[#b79d8a]/30 px-4 py-2 text-xs font-semibold tracking-wide text-[#765f50] transition hover:bg-[#efe7e0]"
             >
-              {isFa ? "EN" : "FA"}
+              {t.language}
             </button>
 
-            <a
-              href="https://t.me/Tanazbeautybot"
-              target="_blank"
-              rel="noreferrer"
-              className="hidden rounded-full bg-ink px-5 py-3 text-[10px] text-ivory sm:block"
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="rounded-full border border-black/10 p-2 lg:hidden"
+              aria-label="Menu"
             >
-              {t.book}
-            </a>
+              {menuOpen ? <X size={19} /> : <Menu size={19} />}
+            </button>
           </div>
         </div>
+
+        {menuOpen && (
+          <div className="border-t border-black/5 bg-[#fbfaf8] px-6 py-5 lg:hidden">
+            <div className="flex flex-col gap-5">
+              <button onClick={() => scrollTo("home")}>{t.nav.home}</button>
+              <button onClick={() => scrollTo("services")}>
+                {t.nav.services}
+              </button>
+              <button onClick={() => scrollTo("about")}>{t.nav.about}</button>
+              <button onClick={() => scrollTo("gallery")}>
+                {t.nav.gallery}
+              </button>
+              <button onClick={() => scrollTo("contact")}>
+                {t.nav.contact}
+              </button>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* HERO */}
-      <section className="relative min-h-screen overflow-hidden bg-ink text-ivory">
-        <Image
-          src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=2200&q=92"
-          alt="Tanaz Beauty hair styling"
-          fill
-          priority
-          className="object-cover object-center opacity-55"
+      <section
+        id="home"
+        className="relative flex min-h-screen items-center overflow-hidden pt-[76px]"
+      >
+        <img
+          src={images.hero}
+          alt="Tanaz Beauty Salon"
+          className="absolute inset-0 h-full w-full object-cover"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/55 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-ink/20" />
+        <div className="absolute inset-0 bg-black/40" />
 
-        <div className="relative mx-auto flex min-h-screen max-w-7xl items-end px-6 pb-20 pt-40 lg:px-10 lg:pb-28">
-          <div className="max-w-4xl">
-            <Reveal>
-              <p className="mb-6 text-[11px] tracking-[.3em] text-ivory/65">
-                {t.eyebrow}
-              </p>
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24 md:px-8">
+          <div className="max-w-3xl text-white">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs backdrop-blur-md">
+              <Sparkles size={14} />
+              {t.badge}
+            </div>
 
-              <h1 className="font-display text-6xl leading-[.9] sm:text-8xl lg:text-[9rem]">
-                {t.heroTitle}
-                <br />
-                <i className="text-gold">{t.heroTitle2}</i>
-              </h1>
+            <p className="mb-5 text-sm font-medium tracking-wide text-white/80 md:text-base">
+              {t.heroEyebrow}
+            </p>
 
-              <p className="mt-9 max-w-xl text-sm leading-8 text-ivory/70">
-                {t.heroText}
-              </p>
+            <h1 className="whitespace-pre-line text-5xl font-bold leading-[1.2] tracking-tight md:text-7xl">
+              {t.heroTitle}
+            </h1>
 
-              <div className="mt-9 flex flex-wrap items-center gap-4">
-                <a
-                  href="https://t.me/Tanazbeautybot"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full bg-ivory px-7 py-4 text-[10px] tracking-[.12em] text-ink hover:bg-white"
-                >
-                  {t.book}
-                </a>
+            <p className="mt-7 max-w-2xl text-base leading-8 text-white/85 md:text-lg md:leading-9">
+              {t.heroText}
+            </p>
 
-                <a
-                  href="#gallery"
-                  className="group flex items-center gap-2 text-[10px] tracking-[.12em]"
-                >
-                  {t.galleryBtn}
-                  <ArrowUpRight size={14} />
-                </a>
-              </div>
-            </Reveal>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <button
+                onClick={() => scrollTo("contact")}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-bold text-[#332a25] transition hover:bg-[#f2e9e2]"
+              >
+                {t.primary}
+                <ArrowUpLeft size={17} />
+              </button>
+
+              <button
+                onClick={() => scrollTo("services")}
+                className="rounded-full border border-white/40 bg-white/10 px-7 py-4 text-sm font-semibold backdrop-blur-md transition hover:bg-white/20"
+              >
+                {t.secondary}
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* FEATURES */}
-      <section className="border-b hairline bg-ivory">
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 sm:grid-cols-3 lg:px-10">
-          {t.features.map(([n, title, text]) => (
-            <Reveal key={n}>
-              <span className="text-[10px] tracking-[.3em] text-black/35">
-                {n}
-              </span>
-              <h2 className="mt-4 font-display text-3xl">{title}</h2>
-              <p className="mt-3 max-w-xs text-sm leading-7 text-black/55">
-                {text}
-              </p>
-            </Reveal>
-          ))}
         </div>
       </section>
 
       {/* SERVICES */}
-      <section
-        id="services"
-        className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32"
-      >
-        <Reveal>
-          <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
-            <div>
-              <p className="text-[10px] tracking-[.25em] text-black/45">
-                {t.servicesLabel}
-              </p>
-
-              <h2 className="mt-4 font-display text-6xl leading-[.9] sm:text-8xl">
-                {t.servicesTitle}
-                <br />
-                <i>{t.servicesTitle2}</i>
-              </h2>
-            </div>
-
-            <p className="max-w-sm text-sm leading-7 text-black/55">
+      <section id="services" className="px-6 py-24 md:px-8 md:py-32">
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-2xl">
+            <p className="section-eyebrow">{t.servicesEyebrow}</p>
+            <h2 className="section-title whitespace-pre-line">
+              {t.servicesTitle}
+            </h2>
+            <p className="mt-6 text-base leading-8 text-[#756b65] md:text-lg">
               {t.servicesText}
             </p>
           </div>
-        </Reveal>
 
-        <div className="mt-16 divide-y hairline border-y">
-          {t.services.map(([n, title, text], i) => (
-            <Reveal key={n} delay={i * 0.04}>
-              <div className="group grid gap-5 py-8 md:grid-cols-[70px_1fr_1.5fr_25px] md:items-center">
-                <span className="text-[10px] tracking-[.25em] text-black/35">
-                  {n}
-                </span>
+          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {t.services.map((service, index) => {
+              const Icon = service.icon;
 
-                <h3 className="font-display text-3xl md:text-4xl">
-                  {title}
-                </h3>
+              return (
+                <div
+                  key={index}
+                  className="group rounded-[28px] border border-[#e8e0da] bg-white p-7 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/5"
+                >
+                  <div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f1e8e1] text-[#8c6d59]">
+                    <Icon size={21} strokeWidth={1.7} />
+                  </div>
 
-                <p className="max-w-md text-sm leading-7 text-black/50">
-                  {text}
-                </p>
+                  <h3 className="text-xl font-bold">{service.title}</h3>
 
-                <ArrowUpRight size={18} />
-              </div>
-            </Reveal>
-          ))}
+                  <p className="mt-4 text-sm leading-7 text-[#776d67]">
+                    {service.text}
+                  </p>
+
+                  <div className="mt-7 h-px w-10 bg-[#b79d8a] transition-all group-hover:w-20" />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      {/* STORY */}
-      <section id="story" className="bg-[#e8dfd3]">
-        <div className="mx-auto grid max-w-7xl items-center gap-14 px-6 py-24 lg:grid-cols-2 lg:px-10 lg:py-32">
-          <Reveal>
-            <div className="relative aspect-[4/5] overflow-hidden">
-              <Image
-                src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1400&q=90"
-                alt="Tanaz Beauty salon"
-                fill
-                className="object-cover"
+      {/* ABOUT */}
+      <section
+        id="about"
+        className="bg-[#eee7e1] px-6 py-24 md:px-8 md:py-32"
+      >
+        <div className="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-2 lg:gap-20">
+          <div className="relative">
+            <div className="overflow-hidden rounded-[34px]">
+              <img
+                src={images.beauty}
+                alt="Beauty service at Tanaz Beauty"
+                className="h-[520px] w-full object-cover md:h-[650px]"
               />
             </div>
-          </Reveal>
 
-          <Reveal delay={0.1}>
-            <p className="text-[10px] tracking-[.25em] text-black/45">
-              {t.storyLabel}
-            </p>
+            <div className="absolute -bottom-6 -left-3 rounded-2xl bg-white px-6 py-5 shadow-xl md:-left-6">
+              <div className="text-xs text-[#89766a]">
+                Tanaz Beauty
+              </div>
+              <div className="mt-1 text-sm font-bold">
+                Beauty with intention
+              </div>
+            </div>
+          </div>
 
-            <h2 className="mt-5 font-display text-6xl leading-[.88] sm:text-8xl">
-              {t.storyTitle}
-              <br />
-              <i>{t.storyTitle2}</i>
+          <div>
+            <p className="section-eyebrow">{t.aboutEyebrow}</p>
+
+            <h2 className="section-title whitespace-pre-line">
+              {t.aboutTitle}
             </h2>
 
-            <p className="mt-8 max-w-lg text-sm leading-8 text-black/60">
-              {t.storyText}
+            <p className="mt-7 text-base leading-9 text-[#685e58] md:text-lg">
+              {t.aboutText}
             </p>
-          </Reveal>
+
+            <p className="mt-5 text-base leading-9 text-[#685e58] md:text-lg">
+              {t.aboutText2}
+            </p>
+
+            <button
+              onClick={() => scrollTo("contact")}
+              className="mt-8 rounded-full bg-[#332a25] px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#4a3c34]"
+            >
+              {t.aboutButton}
+            </button>
+          </div>
         </div>
       </section>
 
       {/* GALLERY */}
+      <section id="gallery" className="px-6 py-24 md:px-8 md:py-32">
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-2xl">
+            <p className="section-eyebrow">{t.galleryEyebrow}</p>
+            <h2 className="section-title">{t.galleryTitle}</h2>
+            <p className="mt-6 text-base leading-8 text-[#756b65] md:text-lg">
+              {t.galleryText}
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            <div className="overflow-hidden rounded-[28px] lg:col-span-2 lg:row-span-2">
+              <img
+                src={images.color}
+                alt="Hair color"
+                className="h-full min-h-[500px] w-full object-cover transition duration-700 hover:scale-105"
+              />
+            </div>
+
+            <div className="overflow-hidden rounded-[28px]">
+              <img
+                src={images.makeup}
+                alt="Makeup"
+                className="h-[300px] w-full object-cover transition duration-700 hover:scale-105"
+              />
+            </div>
+
+            <div className="overflow-hidden rounded-[28px]">
+              <img
+                src={images.styling}
+                alt="Hair styling"
+                className="h-[300px] w-full object-cover transition duration-700 hover:scale-105"
+              />
+            </div>
+
+            <div className="overflow-hidden rounded-[28px] lg:col-span-2">
+              <img
+                src={images.hero}
+                alt="Beauty salon"
+                className="h-[300px] w-full object-cover transition duration-700 hover:scale-105"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* BOOKING */}
       <section
-        id="gallery"
-        className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32"
+        id="contact"
+        className="bg-[#332a25] px-6 py-24 text-white md:px-8 md:py-32"
       >
-        <Reveal>
-          <div className="flex items-end justify-between">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
             <div>
-              <p className="text-[10px] tracking-[.25em] text-black/45">
-                {t.galleryLabel}
+              <p className="mb-5 text-sm font-semibold tracking-wide text-[#cdb6a5]">
+                {t.bookingEyebrow}
               </p>
 
-              <h2 className="mt-4 font-display text-6xl sm:text-8xl">
-                {t.galleryTitle} <i>{t.galleryTitle2}</i>
+              <h2 className="whitespace-pre-line text-4xl font-bold leading-[1.3] md:text-6xl">
+                {t.bookingTitle}
               </h2>
-            </div>
 
-            <a
-              href="https://www.instagram.com/tanazz.beauty/"
-              target="_blank"
-              rel="noreferrer"
-              className="hidden items-center gap-2 text-[10px] sm:flex"
-            >
-              Instagram
-              <ArrowRight size={14} />
-            </a>
-          </div>
-        </Reveal>
+              <p className="mt-7 max-w-2xl text-base leading-8 text-white/65 md:text-lg">
+                {t.bookingText}
+              </p>
 
-        <div className="mt-14 grid grid-cols-2 gap-3 md:grid-cols-3">
-          {gallery.map((item, i) => (
-            <Reveal key={item.src} delay={i * 0.04}>
-              <div
-                className={`group relative aspect-[3/4] overflow-hidden ${
-                  i === 1 || i === 4 ? "md:translate-y-12" : ""
-                }`}
-              >
-                <Image
-                  src={item.src}
-                  alt={item.alt}
-                  fill
-                  className="object-cover transition duration-700 group-hover:scale-105"
-                />
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href="https://t.me/Tanazbeautybot"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-bold text-[#332a25] transition hover:bg-[#eee5df]"
+                >
+                  <Send size={17} />
+                  {t.telegram}
+                </a>
+
+                <a
+                  href="tel:+983136518167"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-7 py-4 text-sm font-semibold transition hover:bg-white/10"
+                >
+                  <Phone size={17} />
+                  {t.call}
+                </a>
               </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* REVIEW */}
-      <section className="bg-ink text-ivory">
-        <div className="mx-auto max-w-4xl px-6 py-24 text-center lg:py-32">
-          <Reveal>
-            <div className="flex justify-center gap-1">
-              {[1, 2, 3, 4, 5].map((x) => (
-                <Star
-                  key={x}
-                  size={13}
-                  fill="currentColor"
-                  className="text-gold"
-                />
-              ))}
             </div>
 
-            <blockquote className="mt-8 font-display text-3xl leading-tight sm:text-5xl">
-              {t.review}
-            </blockquote>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* BOOK */}
-      <section id="book" className="bg-[#e8dfd3]">
-        <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
-          <Reveal>
-            <p className="text-[10px] tracking-[.25em] text-black/45">
-              {t.readyLabel}
-            </p>
-
-            <h2 className="mt-5 max-w-4xl font-display text-6xl leading-[.86] sm:text-8xl">
-              {t.readyTitle}
-              <br />
-              <i>{t.readyTitle2}</i>
-            </h2>
-
-            <div className="mt-10 flex flex-wrap gap-4">
+            <div className="space-y-3">
               <a
-                href="tel:+983136518167"
-                className="rounded-full bg-ink px-8 py-4 text-[10px] text-ivory"
-              >
-                <Phone className="mr-2 inline" size={14} />
-                {t.phoneBtn}
-              </a>
-
-              <a
-                href="https://t.me/Tanazbeautybot"
+                href="https://www.google.com/maps/search/?api=1&query=سپاهانشهر+بلوار+غدیر+مجتمع+عقیق+5+پلاک+22"
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-black/25 px-8 py-4 text-[10px]"
+                className="contact-card"
               >
-                <Send className="mr-2 inline" size={14} />
-                {t.telegramBtn}
+                <MapPin size={20} />
+                <div>
+                  <div className="contact-label">{t.addressTitle}</div>
+                  <div className="contact-value">{t.address}</div>
+                </div>
               </a>
+
+              <a href="tel:+983136518167" className="contact-card">
+                <Phone size={20} />
+                <div>
+                  <div className="contact-label">{t.phoneTitle}</div>
+                  <div className="contact-value">03136518167</div>
+                  <div className="contact-value mt-1">09307984291</div>
+                </div>
+              </a>
+
+              <a
+                href="https://www.instagram.com/tanazz.beauty/"
+                target="_blank"
+                rel="noreferrer"
+                className="contact-card"
+              >
+                <Instagram size={20} />
+                <div>
+                  <div className="contact-label">
+                    {t.instagramTitle}
+                  </div>
+                  <div className="contact-value">
+                    @tanazz.beauty
+                  </div>
+                </div>
+              </a>
+
+              <div className="contact-card">
+                <Clock size={20} />
+                <div>
+                  <div className="contact-label">{t.hoursTitle}</div>
+                  <div className="contact-value">{t.hours}</div>
+                </div>
+              </div>
             </div>
-          </Reveal>
+          </div>
         </div>
       </section>
 
-      {/* CONTACT */}
-      <footer id="contact" className="bg-ink text-ivory">
-        <div className="mx-auto grid max-w-7xl gap-14 px-6 py-16 lg:grid-cols-4 lg:px-10">
-          <div className="lg:col-span-2">
-            <div className="font-display text-3xl tracking-[.12em]">
-              TANAZ <span className="text-gold">BEAUTY</span>
-            </div>
-
-            <p className="mt-5 max-w-sm text-sm leading-7 text-ivory/50">
-              {t.footer}
-            </p>
-
-            <a
-              href="https://www.instagram.com/tanazz.beauty/"
-              target="_blank"
-              rel="noreferrer"
-              className="mt-7 inline-flex items-center gap-2 text-xs"
-            >
-              <Instagram size={16} />
-              {t.instagram}
-            </a>
-          </div>
-
-          <div>
-            <p className="text-[10px] text-ivory/35">{t.visit}</p>
-
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=سپاهانشهر+بلوار+غدیر+مجتمع+عقیق+5+پلاک+22"
-              target="_blank"
-              rel="noreferrer"
-              className="mt-5 flex gap-3 text-sm leading-7 text-ivory/65 hover:text-ivory"
-            >
-              <MapPin size={18} className="mt-1 shrink-0" />
-              <span>
-                سپاهانشهر، بلوار غدیر
-                <br />
-                مجتمع عقیق ۵، طبقه زیرین
-                <br />
-                انتهای راهرو، پلاک ۲۲
-              </span>
-            </a>
-          </div>
-
-          <div>
-            <p className="text-[10px] text-ivory/35">{t.contact}</p>
-
-            <a
-              href="tel:+983136518167"
-              className="mt-5 flex items-center gap-3 text-sm text-ivory/65 hover:text-ivory"
-            >
-              <Phone size={16} />
-              ۰۳۱۳۶۵۱۸۱۶۷
-            </a>
-
-            <a
-              href="tel:+989307984291"
-              className="mt-4 flex items-center gap-3 text-sm text-ivory/65 hover:text-ivory"
-            >
-              <Phone size={16} />
-              ۰۹۳۰۷۹۸۴۲۹۱
-            </a>
-
-            <div className="mt-7">
-              <p className="text-[10px] text-ivory/35">{t.hours}</p>
-
-              <p className="mt-3 flex gap-3 text-sm leading-7 text-ivory/65">
-                <Clock size={16} className="mt-1 shrink-0" />
-                <span>
-                  {t.hoursText}
-                  <br />
-                  {t.hoursTime}
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-white/10 px-6 py-6 text-center text-[9px] text-ivory/30">
-          © 2026 Tanaz Beauty. All rights reserved.
+      {/* FOOTER */}
+      <footer className="bg-[#27201c] px-6 py-8 text-white/50 md:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 text-center text-xs md:flex-row md:items-center md:justify-between md:text-right">
+          <div>© {new Date().getFullYear()} Tanaz Beauty</div>
+          <div>{t.footer}</div>
         </div>
       </footer>
+
+      <style jsx global>{`
+        html {
+          scroll-behavior: smooth;
+        }
+
+        body {
+          margin: 0;
+          background: #fbfaf8;
+        }
+
+        .nav-link {
+          font-size: 13px;
+          color: #5f5650;
+          transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+          color: #9a765e;
+        }
+
+        .section-eyebrow {
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          color: #a17e68;
+        }
+
+        .section-title {
+          margin-top: 14px;
+          font-size: clamp(34px, 5vw, 58px);
+          font-weight: 800;
+          line-height: 1.3;
+          letter-spacing: -0.03em;
+          color: #2f2925;
+        }
+
+        .contact-card {
+          display: flex;
+          align-items: flex-start;
+          gap: 16px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 24px;
+          padding: 22px;
+          color: rgba(255, 255, 255, 0.9);
+          transition: background 0.25s ease;
+        }
+
+        .contact-card:hover {
+          background: rgba(255, 255, 255, 0.06);
+        }
+
+        .contact-label {
+          font-size: 11px;
+          color: rgba(255, 255, 255, 0.45);
+          margin-bottom: 6px;
+        }
+
+        .contact-value {
+          font-size: 14px;
+          line-height: 1.9;
+          color: rgba(255, 255, 255, 0.85);
+        }
+
+        @media (max-width: 640px) {
+          .section-title {
+            font-size: 34px;
+            line-height: 1.35;
+          }
+        }
+      `}</style>
     </main>
   );
 }
+
