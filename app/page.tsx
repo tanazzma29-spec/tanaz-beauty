@@ -64,7 +64,7 @@ const content = {
     heroEyebrow: "سالن زیبایی طناز",
 
     heroText:
-      "خدمات تخصصی زیبایی، رنگ و احیای مو، میکاپ، شینیون و استایل در محیطی آرام و حرفه‌ای.",
+      "سالن زیبایی طناز در سپاهانشهر اصفهان؛ ارائه خدمات تخصصی رنگ و احیای مو، کوتاهی، میکاپ، شینیون، ابرو، مژه و ناخن در محیطی آرام و حرفه‌ای.",
 
     primary: "رزرو وقت",
     secondary: "مشاهده خدمات",
@@ -383,9 +383,9 @@ export default function Home() {
               {t.badge}
             </div>
 
-            <p className="mb-3 text-[20px] font-bold leading-[1.8] text-white md:text-[23px]">
-              {t.heroEyebrow}
-            </p>
+<h1 className="mb-3 text-[20px] font-bold leading-[1.8] text-white md:text-[23px]">
+  {t.heroEyebrow}
+</h1>
 
             <p className="max-w-[560px] text-[15px] leading-[2] text-white/85 md:text-[16px]">
               {t.heroText}
