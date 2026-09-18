@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -29,6 +30,25 @@ const images = {
     "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1000&q=85",
   beauty:
     "https://images.unsplash.com/photo-1487412912498-0447578fcca8?auto=format&fit=crop&w=1000&q=85",
+};
+
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "BeautySalon",
+  name: "سالن زیبایی طناز",
+  url: "https://tanaz-beauty.pages.dev/",
+  telephone: "+983136518167",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress:
+      "سپاهانشهر، بلوار غدیر، مجتمع عقیق ۵، طبقه زیرین، انتهای راهرو، پلاک ۲۲",
+    addressLocality: "اصفهان",
+    addressCountry: "IR",
+  },
+  sameAs: [
+    "https://www.instagram.com/tanazz.beauty/",
+    "https://t.me/Tanazbeautybot",
+  ],
 };
 
 const content = {
@@ -253,6 +273,13 @@ export default function Home() {
       dir={isFa ? "rtl" : "ltr"}
       className="min-h-screen bg-[#fbfaf8] text-[#302a26]"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(localBusinessSchema),
+        }}
+      />
+
       {/* HEADER */}
 
       <header className="fixed inset-x-0 top-0 z-50 border-b border-black/[0.06] bg-[#fbfaf8]/95 backdrop-blur-xl">
@@ -686,3 +713,4 @@ export default function Home() {
     </main>
   );
 }
+
