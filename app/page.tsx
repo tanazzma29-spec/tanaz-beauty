@@ -4,7 +4,6 @@ import { useState } from "react";
 import {
   ArrowLeft,
   ArrowUpLeft,
-  CalendarDays,
   ChevronDown,
   Instagram,
   MapPin,
@@ -12,10 +11,20 @@ import {
   MessageCircle,
   Phone,
   Sparkles,
-  Star,
   X,
 } from "lucide-react";
 import { Cormorant_Garamond, Vazirmatn } from "next/font/google";
+
+/* -------------------------------------------------------------------------- */
+/* Fonts                                                                      */
+/* -------------------------------------------------------------------------- */
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
 
 const vazirmatn = Vazirmatn({
   subsets: ["arabic"],
@@ -24,25 +33,9 @@ const vazirmatn = Vazirmatn({
   display: "swap",
 });
 
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-cormorant",
-  display: "swap",
-});
-
-const images = {
-  hero:
-    "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1800&q=90",
-  color:
-    "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=90",
-  makeup:
-    "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1200&q=90",
-  styling:
-    "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1200&q=90",
-  beauty:
-    "https://images.unsplash.com/photo-1487412912498-0447578fcca8?auto=format&fit=crop&w=1200&q=90",
-};
+/* -------------------------------------------------------------------------- */
+/* Data                                                                       */
+/* -------------------------------------------------------------------------- */
 
 const services = [
   {
@@ -50,53 +43,61 @@ const services = [
     title: "رنگ و لایت",
     english: "COLOR & LIGHT",
     description:
-      "رنگ‌های تخصصی، لایت، بالیاژ و تکنیک‌هایی متناسب با چهره و استایل شما.",
-    image: images.color,
+      "رنگ‌هایی هماهنگ با تناژ پوست و استایل شخصی تو؛ از تغییرهای ظریف تا لایت‌های چشمگیر.",
+    image:
+      "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=90",
   },
   {
     number: "02",
     title: "میکاپ",
     english: "MAKEUP",
     description:
-      "میکاپ ظریف و حرفه‌ای برای مراسم، مهمانی و لحظه‌هایی که قرار است بدرخشید.",
-    image: images.makeup,
+      "میکاپی تمیز، ظریف و متناسب با چهره؛ برای روزهایی که می‌خواهی بهترین نسخه خودت باشی.",
+    image:
+      "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1200&q=90",
   },
   {
     number: "03",
     title: "شینیون و استایل",
     english: "STYLING",
     description:
-      "استایل مو با تمرکز بر فرم صورت، لباس و شخصیت شما؛ از ساده تا مجلل.",
-    image: images.styling,
+      "استایل‌هایی با فرم دقیق و ماندگار، متناسب با چهره، لباس و حال‌وهوای مراسم.",
+    image:
+      "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1200&q=90",
   },
   {
     number: "04",
     title: "خدمات تخصصی زیبایی",
     english: "BEAUTY",
     description:
-      "مجموعه‌ای از خدمات زیبایی با تمرکز بر ظرافت، کیفیت و نتیجه‌ای طبیعی.",
-    image: images.beauty,
+      "جزئیاتی که نتیجه نهایی را کامل می‌کنند؛ با تمرکز روی ظرافت، تناسب و کیفیت.",
+    image:
+      "https://images.unsplash.com/photo-1487412912498-0447578fcca8?auto=format&fit=crop&w=1200&q=90",
   },
 ];
 
-const localBusinessSchema = {
-  "@context": "https://schema.org",
-  "@type": "BeautySalon",
-  name: "سالن زیبایی طناز",
-  url: "https://tanazzbeauty.ir/",
-  telephone: "+983136518167",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress:
-      "سپاهانشهر، بلوار غدیر، مجتمع عقیق ۵، طبقه زیرین، انتهای راهرو، پلاک ۲۲",
-    addressLocality: "Isfahan",
-    addressCountry: "IR",
+const gallery = [
+  {
+    src: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=90",
+    alt: "خدمات رنگ و لایت سالن زیبایی طناز",
   },
-  sameAs: [
-    "https://www.instagram.com/tanazz.beauty/",
-    "https://t.me/Tanazbeautybot",
-  ],
-};
+  {
+    src: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1200&q=90",
+    alt: "میکاپ سالن زیبایی طناز",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1200&q=90",
+    alt: "استایل و شینیون سالن زیبایی طناز",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1487412912498-0447578fcca8?auto=format&fit=crop&w=1200&q=90",
+    alt: "خدمات زیبایی سالن طناز",
+  },
+];
+
+/* -------------------------------------------------------------------------- */
+/* Component                                                                  */
+/* -------------------------------------------------------------------------- */
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -104,21 +105,539 @@ export default function Home() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <main
-      dir="rtl"
-      className={`${vazirmatn.variable} ${cormorant.variable} site`}
-    >
+    <main className={`${vazirmatn.variable} ${cormorant.variable} site`}>
+      {/* ------------------------------------------------------------------ */}
+      {/* Header                                                             */}
+      {/* ------------------------------------------------------------------ */}
+
+      <header className="header">
+        <div className="container header-inner">
+          <a href="#top" className="brand" onClick={closeMenu}>
+            <span className="brand-mark">T</span>
+            <span className="brand-text">
+              <strong>طناز</strong>
+              <small>BEAUTY SALON</small>
+            </span>
+          </a>
+
+          <nav className="desktop-nav" aria-label="منوی اصلی">
+            <a href="#services">خدمات</a>
+            <a href="#about">درباره ما</a>
+            <a href="#gallery">گالری</a>
+            <a href="#contact">تماس</a>
+          </nav>
+
+          <a className="header-cta" href="#contact">
+            <span>رزرو نوبت</span>
+            <ArrowUpLeft size={16} strokeWidth={1.5} />
+          </a>
+
+          <button
+            className="menu-button"
+            type="button"
+            aria-label={menuOpen ? "بستن منو" : "باز کردن منو"}
+            onClick={() => setMenuOpen((value) => !value)}
+          >
+            {menuOpen ? <X size={23} /> : <Menu size={23} />}
+          </button>
+        </div>
+
+        <div className={`mobile-menu ${menuOpen ? "is-open" : ""}`}>
+          <nav aria-label="منوی موبایل">
+            <a href="#services" onClick={closeMenu}>
+              خدمات
+            </a>
+            <a href="#about" onClick={closeMenu}>
+              درباره ما
+            </a>
+            <a href="#gallery" onClick={closeMenu}>
+              گالری
+            </a>
+            <a href="#contact" onClick={closeMenu}>
+              تماس
+            </a>
+          </nav>
+
+          <a
+            className="mobile-menu-contact"
+            href="tel:03136518167"
+            onClick={closeMenu}
+          >
+            <Phone size={17} />
+            031 365 18167
+          </a>
+        </div>
+      </header>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Hero                                                               */}
+      {/* ------------------------------------------------------------------ */}
+
+      <section className="hero" id="top">
+        <div className="hero-image">
+          <img
+            src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1800&q=90"
+            alt="فضای سالن زیبایی طناز"
+          />
+        </div>
+
+        <div className="hero-overlay" />
+
+        <div className="container hero-content">
+          <div className="hero-kicker">
+            <span />
+            <span className="en-label">SEPahan SHahr · ISFAHAN</span>
+            <span />
+          </div>
+
+          <div className="hero-copy">
+            <p className="hero-eyebrow">SALON DE BEAUTÉ</p>
+
+            <h1 className="hero-title fa-display">
+              زیبایی تو،
+              <br />
+              <em>امضای توست.</em>
+            </h1>
+
+            <p className="hero-description">
+              جایی برای زیبایی، آرامش و توجه به جزئیاتی که تو را خاص‌تر
+              می‌کنند. در طناز، هر انتخاب با شناخت سبک و شخصیت تو شکل می‌گیرد.
+            </p>
+
+            <div className="hero-actions">
+              <a href="#services" className="button button-light">
+                <span>مشاهده خدمات</span>
+                <ArrowLeft size={17} strokeWidth={1.5} />
+              </a>
+
+              <a href="#about" className="text-link light-link">
+                درباره طناز
+                <span />
+              </a>
+            </div>
+          </div>
+
+          <div className="hero-bottom">
+            <span>EST. 2024</span>
+            <span>BEAUTY · STYLE · CARE</span>
+            <span>ISFAHAN, IR</span>
+          </div>
+        </div>
+
+        <a href="#services" className="scroll-indicator" aria-label="اسکرول به خدمات">
+          <span>SCROLL</span>
+          <ChevronDown size={16} strokeWidth={1.3} />
+        </a>
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Intro Strip                                                        */}
+      {/* ------------------------------------------------------------------ */}
+
+      <section className="intro-strip">
+        <div className="container intro-grid">
+          <div className="intro-number">01</div>
+
+          <p className="intro-text">
+            زیبایی برای ما فقط یک ظاهر نیست؛
+            <strong> تجربه‌ای است که از شناخت تو شروع می‌شود.</strong>
+          </p>
+
+          <div className="intro-signature">
+            <span className="en-display">Tanaz</span>
+            <small>Beauty Salon</small>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Services                                                           */}
+      {/* ------------------------------------------------------------------ */}
+
+      <section className="services section" id="services">
+        <div className="container">
+          <div className="section-heading">
+            <div>
+              <span className="section-index">02 / SERVICES</span>
+
+              <h2 className="section-title fa-display">
+                خدماتی برای
+                <br />
+                <em>نسخه خاص تو.</em>
+              </h2>
+            </div>
+
+            <p className="section-intro">
+              از انتخاب رنگ تا آخرین جزئیات استایل، همه‌چیز با نگاه به فرم
+              چهره، سلیقه و سبک زندگی تو انجام می‌شود.
+            </p>
+          </div>
+
+          <div className="services-list">
+            {services.map((service, index) => (
+              <article className="service-row" key={service.number}>
+                <div className="service-number">{service.number}</div>
+
+                <div className="service-image">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    loading="lazy"
+                  />
+                </div>
+
+                <div className="service-content">
+                  <span className="service-english en-label">
+                    {service.english}
+                  </span>
+
+                  <h3>{service.title}</h3>
+
+                  <p>{service.description}</p>
+
+                  <a href="#contact" className="service-link">
+                    <span>رزرو این خدمت</span>
+                    <ArrowLeft size={16} strokeWidth={1.4} />
+                  </a>
+                </div>
+
+                <div className="service-arrow">
+                  <ArrowUpLeft size={24} strokeWidth={1.2} />
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* About                                                              */}
+      {/* ------------------------------------------------------------------ */}
+
+      <section className="about section" id="about">
+        <div className="about-decoration">T</div>
+
+        <div className="container about-grid">
+          <div className="about-image-wrap">
+            <div className="about-image">
+              <img
+                src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1400&q=90"
+                alt="فضای زیبایی و مراقبت سالن طناز"
+                loading="lazy"
+              />
+            </div>
+
+            <div className="about-caption">
+              <span>DETAILS MATTER</span>
+              <span>01 — 04</span>
+            </div>
+          </div>
+
+          <div className="about-content">
+            <span className="section-index">03 / OUR PHILOSOPHY</span>
+
+            <h2 className="about-title fa-display">
+              زیبایی،
+              <br />
+              وقتی زیباست
+              <br />
+              <em>که شبیه خودت باشد.</em>
+            </h2>
+
+            <p className="about-description">
+              سالن زیبایی طناز در سپاهان‌شهر اصفهان، با نگاه به زیبایی طبیعی و
+              استایل شخصی شکل گرفته است. هدف ما این است که نتیجه نهایی فقط
+              زیبا نباشد؛ بلکه با چهره، شخصیت و سبک زندگی تو هماهنگ باشد.
+            </p>
+
+            <div className="about-values">
+              <div>
+                <span>01</span>
+                <strong>ظرافت</strong>
+                <p>توجه به جزئیاتی که تفاوت را می‌سازند.</p>
+              </div>
+
+              <div>
+                <span>02</span>
+                <strong>تخصص</strong>
+                <p>انتخاب آگاهانه و اجرای دقیق هر خدمت.</p>
+              </div>
+
+              <div>
+                <span>03</span>
+                <strong>آرامش</strong>
+                <p>فضایی برای مکث کردن و وقت گذاشتن برای خودت.</p>
+              </div>
+
+              <div>
+                <span>04</span>
+                <strong>شخصی‌سازی</strong>
+                <p>هر نتیجه برای چهره و سبک تو طراحی می‌شود.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Gallery                                                            */}
+      {/* ------------------------------------------------------------------ */}
+
+      <section className="gallery section" id="gallery">
+        <div className="container">
+          <div className="gallery-heading">
+            <div>
+              <span className="section-index">04 / THE GALLERY</span>
+              <h2 className="section-title fa-display">
+                زیبایی در
+                <br />
+                <em>جزئیات است.</em>
+              </h2>
+            </div>
+
+            <p>
+              نگاهی کوتاه به حال‌وهوای زیبایی و استایلی که در طناز دنبال
+              می‌کنیم.
+            </p>
+          </div>
+
+          <div className="gallery-grid">
+            {gallery.map((item, index) => (
+              <div
+                className={`gallery-item gallery-item-${index + 1}`}
+                key={item.src}
+              >
+                <img src={item.src} alt={item.alt} loading="lazy" />
+                <span className="gallery-index">
+                  0{index + 1}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Contact                                                            */}
+      {/* ------------------------------------------------------------------ */}
+
+      <section className="contact section" id="contact">
+        <div className="contact-bg-word en-display">TANAZ</div>
+
+        <div className="container contact-grid">
+          <div className="contact-intro">
+            <span className="section-index light-index">
+              05 / CONTACT & APPOINTMENT
+            </span>
+
+            <h2 className="contact-title fa-display">
+              وقت آن است که
+              <br />
+              <em>برای خودت وقت بگذاری.</em>
+            </h2>
+
+            <p>
+              برای دریافت مشاوره، هماهنگی خدمات یا رزرو نوبت با ما در تماس
+              باش. خوشحال می‌شویم میزبان تو باشیم.
+            </p>
+          </div>
+
+          <div className="contact-details">
+            <a href="tel:03136518167" className="contact-item">
+              <span className="contact-icon">
+                <Phone size={18} strokeWidth={1.3} />
+              </span>
+
+              <span className="contact-info">
+                <small>PHONE</small>
+                <strong>031 365 18167</strong>
+              </span>
+
+              <ArrowUpLeft size={19} strokeWidth={1.2} />
+            </a>
+
+            <a href="tel:09307984291" className="contact-item">
+              <span className="contact-icon">
+                <MessageCircle size={18} strokeWidth={1.3} />
+              </span>
+
+              <span className="contact-info">
+                <small>MOBILE</small>
+                <strong dir="ltr">0930 798 4291</strong>
+              </span>
+
+              <ArrowUpLeft size={19} strokeWidth={1.2} />
+            </a>
+
+            <a
+              href="https://www.instagram.com/tanazz.beauty/"
+              target="_blank"
+              rel="noreferrer"
+              className="contact-item"
+            >
+              <span className="contact-icon">
+                <Instagram size={18} strokeWidth={1.3} />
+              </span>
+
+              <span className="contact-info">
+                <small>INSTAGRAM</small>
+                <strong dir="ltr">@tanazz.beauty</strong>
+              </span>
+
+              <ArrowUpLeft size={19} strokeWidth={1.2} />
+            </a>
+
+            <a
+              href="https://t.me/Tanazbeautybot"
+              target="_blank"
+              rel="noreferrer"
+              className="contact-item"
+            >
+              <span className="contact-icon">
+                <MessageCircle size={18} strokeWidth={1.3} />
+              </span>
+
+              <span className="contact-info">
+                <small>TELEGRAM</small>
+                <strong dir="ltr">@Tanazbeautybot</strong>
+              </span>
+
+              <ArrowUpLeft size={19} strokeWidth={1.2} />
+            </a>
+
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=سپاهانشهر%20بلوار%20غدیر%20مجتمع%20عقیق%205%20پلاک%2022"
+              target="_blank"
+              rel="noreferrer"
+              className="contact-address"
+            >
+              <MapPin size={18} strokeWidth={1.3} />
+
+              <span>
+                سپاهان‌شهر، بلوار غدیر،
+                <br />
+                مجتمع عقیق ۵، طبقه زیرین،
+                <br />
+                انتهای راهرو، پلاک ۲۲
+              </span>
+
+              <ArrowUpLeft size={19} strokeWidth={1.2} />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Footer                                                             */}
+      {/* ------------------------------------------------------------------ */}
+
+      <footer className="footer">
+        <div className="container footer-top">
+          <div className="footer-brand">
+            <span className="footer-logo">T</span>
+
+            <div>
+              <strong>سالن زیبایی طناز</strong>
+              <span>BEAUTY SALON · ISFAHAN</span>
+            </div>
+          </div>
+
+          <div className="footer-socials">
+            <a
+              href="https://www.instagram.com/tanazz.beauty/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+            >
+              <Instagram size={18} strokeWidth={1.4} />
+            </a>
+
+            <a
+              href="https://t.me/Tanazbeautybot"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Telegram"
+            >
+              <MessageCircle size={18} strokeWidth={1.4} />
+            </a>
+          </div>
+        </div>
+
+        <div className="container footer-bottom">
+          <span>© {new Date().getFullYear()} TANAZ BEAUTY SALON</span>
+
+          <a href="#top">
+            بازگشت به بالا
+            <ArrowUpLeft size={15} strokeWidth={1.3} />
+          </a>
+        </div>
+      </footer>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Mobile CTA                                                         */}
+      {/* ------------------------------------------------------------------ */}
+
+      <div className="mobile-cta">
+        <a href="tel:09307984291">
+          <Phone size={17} strokeWidth={1.5} />
+          <span>رزرو نوبت</span>
+        </a>
+
+        <a
+          href="https://www.instagram.com/tanazz.beauty/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Instagram size={17} strokeWidth={1.5} />
+          <span>اینستاگرام</span>
+        </a>
+      </div>
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Local Business Schema                                              */}
+      {/* ------------------------------------------------------------------ */}
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BeautySalon",
+            name: "سالن زیبایی طناز",
+            url: "https://tanazzbeauty.ir/",
+            telephone: "+983136518167",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress:
+                "سپاهانشهر، بلوار غدیر، مجتمع عقیق ۵، طبقه زیرین، انتهای راهرو، پلاک ۲۲",
+              addressLocality: "Isfahan",
+              addressCountry: "IR",
+            },
+            sameAs: [
+              "https://www.instagram.com/tanazz.beauty/",
+              "https://t.me/Tanazbeautybot",
+            ],
+          }),
+        }}
+      />
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Styles                                                              */}
+      {/* ------------------------------------------------------------------ */}
+
       <style jsx global>{`
         :root {
           --cream: #f7f4ef;
-          --cream-2: #eee9e1;
+          --cream-deep: #eee9e1;
           --paper: #fbfaf8;
-          --ink: #25211e;
-          --muted: #77706a;
-          --line: rgba(37, 33, 30, 0.13);
-          --dark: #27221f;
-          --dark-soft: #332c28;
-          --gold: #9d8061;
+          --ink: #27221f;
+          --ink-soft: #4e4843;
+          --muted: #817970;
+          --line: rgba(39, 34, 31, 0.13);
+          --dark: #29231f;
+          --dark-soft: #342d28;
+          --gold: #a2876b;
+          --white: #ffffff;
         }
 
         * {
@@ -131,7 +650,7 @@ export default function Home() {
 
         body {
           margin: 0;
-          background: var(--cream);
+          background: var(--paper);
           color: var(--ink);
           font-family: var(--font-vazirmatn), sans-serif;
         }
@@ -145,826 +664,997 @@ export default function Home() {
           font: inherit;
         }
 
+        img {
+          display: block;
+          width: 100%;
+        }
+
         .site {
-          min-height: 100vh;
           overflow: hidden;
-          background: var(--cream);
+          background: var(--paper);
         }
 
         .container {
-          width: min(1180px, calc(100% - 40px));
+          width: min(1180px, calc(100% - 48px));
           margin-inline: auto;
         }
 
         .fa-display {
           font-family: var(--font-vazirmatn), sans-serif;
+          font-weight: 400;
+          letter-spacing: -0.045em;
         }
 
         .en-display {
           font-family: var(--font-cormorant), serif;
-          direction: ltr;
+          font-weight: 500;
+          letter-spacing: 0.015em;
         }
 
-        .eyebrow {
-          display: inline-flex;
-          align-items: center;
-          gap: 9px;
-          color: var(--muted);
-          font-size: 10px;
-          font-weight: 600;
-          letter-spacing: 0.14em;
-          line-height: 1.5;
-        }
-
-        .eyebrow::before {
-          content: "";
-          width: 28px;
-          height: 1px;
-          background: var(--gold);
+        .en-label {
+          font-family: var(--font-cormorant), serif;
+          font-size: 13px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
         }
 
         .section {
-          padding: clamp(80px, 9vw, 140px) 0;
+          padding: 130px 0;
         }
 
-        .section-heading {
-          max-width: 720px;
-        }
-
-        .section-title {
-          margin: 18px 0 0;
-          font-size: clamp(34px, 5vw, 68px);
-          line-height: 1.2;
-          font-weight: 500;
-          letter-spacing: -0.045em;
-        }
-
-        .section-description {
-          max-width: 540px;
-          margin: 24px 0 0;
-          color: var(--muted);
-          font-size: clamp(13px, 1.25vw, 15px);
-          line-height: 2.2;
-          font-weight: 400;
-        }
-
-        /* HEADER */
+        /* ---------------------------------------------------------------- */
+        /* Header                                                           */
+        /* ---------------------------------------------------------------- */
 
         .header {
           position: absolute;
-          z-index: 20;
+          z-index: 50;
           top: 0;
           left: 0;
-          right: 0;
-          color: white;
+          width: 100%;
+          color: var(--white);
         }
 
         .header-inner {
-          min-height: 88px;
+          min-height: 92px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 30px;
           border-bottom: 1px solid rgba(255, 255, 255, 0.18);
         }
 
         .brand {
-          display: flex;
+          display: inline-flex;
           align-items: center;
-          gap: 13px;
+          gap: 12px;
         }
 
         .brand-mark {
-          width: 39px;
-          height: 39px;
+          width: 40px;
+          height: 40px;
           display: grid;
           place-items: center;
-          border: 1px solid rgba(255, 255, 255, 0.5);
+          border: 1px solid rgba(255, 255, 255, 0.45);
           border-radius: 50%;
           font-family: var(--font-cormorant), serif;
-          font-size: 21px;
-          direction: ltr;
+          font-size: 23px;
+          font-weight: 500;
         }
 
-        .brand-copy {
+        .brand-text {
           display: flex;
           flex-direction: column;
-          gap: 1px;
+          line-height: 1;
         }
 
-        .brand-fa {
-          font-size: 13px;
-          font-weight: 600;
+        .brand-text strong {
+          font-size: 15px;
+          font-weight: 500;
         }
 
-        .brand-en {
+        .brand-text small {
+          margin-top: 5px;
           font-family: var(--font-cormorant), serif;
-          font-size: 12px;
-          letter-spacing: 0.13em;
-          direction: ltr;
-          opacity: 0.8;
+          font-size: 9px;
+          letter-spacing: 0.16em;
+          opacity: 0.72;
         }
 
-        .nav {
+        .desktop-nav {
           display: flex;
           align-items: center;
-          gap: 30px;
+          gap: 36px;
+          margin-inline: auto;
+          padding-inline-start: 70px;
         }
 
-        .nav a {
+        .desktop-nav a {
           position: relative;
-          padding: 8px 0;
-          font-size: 11px;
-          font-weight: 500;
-          opacity: 0.85;
-          transition: opacity 0.2s ease;
+          font-size: 13px;
+          font-weight: 400;
+          opacity: 0.88;
+          transition: opacity 0.25s ease;
         }
 
-        .nav a:hover {
+        .desktop-nav a::after {
+          content: "";
+          position: absolute;
+          right: 0;
+          bottom: -8px;
+          width: 0;
+          height: 1px;
+          background: currentColor;
+          transition: width 0.25s ease;
+        }
+
+        .desktop-nav a:hover {
           opacity: 1;
         }
 
-        .header-action {
-          display: inline-flex;
-          align-items: center;
-          gap: 9px;
-          padding: 11px 17px;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          border-radius: 999px;
-          font-size: 10px;
-          font-weight: 600;
-          transition: background 0.2s ease, color 0.2s ease;
+        .desktop-nav a:hover::after {
+          width: 100%;
         }
 
-        .header-action:hover {
-          background: white;
+        .header-cta {
+          min-height: 42px;
+          padding: 0 17px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.42);
+          font-size: 12px;
+          transition:
+            background 0.25s ease,
+            color 0.25s ease;
+        }
+
+        .header-cta:hover {
+          background: var(--white);
           color: var(--ink);
         }
 
         .menu-button {
           display: none;
-          width: 42px;
-          height: 42px;
-          border: 1px solid rgba(255, 255, 255, 0.35);
-          border-radius: 50%;
+          border: 0;
           background: transparent;
-          color: white;
+          color: inherit;
           cursor: pointer;
+          padding: 7px;
         }
 
-        /* HERO */
+        .mobile-menu {
+          display: none;
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* Hero                                                             */
+        /* ---------------------------------------------------------------- */
 
         .hero {
           position: relative;
-          min-height: min(860px, 100vh);
+          min-height: 100svh;
           display: flex;
-          align-items: flex-end;
-          overflow: hidden;
-          color: white;
-          background: #302925;
+          align-items: center;
+          color: var(--white);
+          background: var(--dark);
         }
 
         .hero-image {
           position: absolute;
           inset: 0;
-          background-image:
+          overflow: hidden;
+        }
+
+        .hero-image img {
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          filter: saturate(0.7);
+          transform: scale(1.02);
+        }
+
+        .hero-overlay {
+          position: absolute;
+          inset: 0;
+          background:
             linear-gradient(
-              180deg,
-              rgba(22, 18, 16, 0.45) 0%,
-              rgba(22, 18, 16, 0.1) 35%,
-              rgba(22, 18, 16, 0.65) 100%
+              90deg,
+              rgba(23, 19, 17, 0.76) 0%,
+              rgba(23, 19, 17, 0.48) 48%,
+              rgba(23, 19, 17, 0.28) 100%
             ),
-            url("${images.hero}");
-          background-position: center;
-          background-size: cover;
-          transform: scale(1.01);
+            linear-gradient(
+              0deg,
+              rgba(23, 19, 17, 0.64) 0%,
+              transparent 35%
+            );
         }
 
         .hero-content {
           position: relative;
           z-index: 2;
-          width: min(1180px, calc(100% - 40px));
-          margin-inline: auto;
-          padding: 170px 0 105px;
+          min-height: 100svh;
+          padding-top: 145px;
+          padding-bottom: 48px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
         }
 
         .hero-kicker {
           display: flex;
           align-items: center;
-          gap: 10px;
-          margin-bottom: 24px;
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 0.08em;
+          gap: 12px;
+          width: fit-content;
+          margin-bottom: 30px;
+          color: rgba(255, 255, 255, 0.74);
         }
 
-        .hero-kicker span {
+        .hero-kicker span:not(.en-label) {
           width: 34px;
           height: 1px;
-          background: rgba(255, 255, 255, 0.7);
+          background: rgba(255, 255, 255, 0.42);
+        }
+
+        .hero-copy {
+          max-width: 720px;
+        }
+
+        .hero-eyebrow {
+          margin: 0 0 17px;
+          font-family: var(--font-cormorant), serif;
+          font-size: 15px;
+          letter-spacing: 0.26em;
+          color: rgba(255, 255, 255, 0.72);
         }
 
         .hero-title {
-          max-width: 760px;
           margin: 0;
-          white-space: pre-line;
-          font-size: clamp(46px, 7.4vw, 104px);
-          line-height: 1.1;
-          font-weight: 500;
-          letter-spacing: -0.065em;
-        }
-
-        .hero-title-en {
-          margin: 22px 0 0;
-          font-family: var(--font-cormorant), serif;
-          font-size: clamp(18px, 2vw, 28px);
+          font-size: clamp(50px, 6.7vw, 91px);
+          line-height: 1.16;
           font-weight: 400;
-          letter-spacing: 0.08em;
-          opacity: 0.88;
-          direction: ltr;
-          text-align: right;
+          text-wrap: balance;
         }
 
-        .hero-bottom {
-          display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
-          gap: 40px;
-          margin-top: 54px;
+        .hero-title em,
+        .section-title em,
+        .about-title em,
+        .contact-title em {
+          font-style: normal;
+          color: #e5d5c2;
         }
 
         .hero-description {
-          max-width: 430px;
-          margin: 0;
-          color: rgba(255, 255, 255, 0.78);
-          font-size: 13px;
+          max-width: 520px;
+          margin: 28px 0 0;
+          color: rgba(255, 255, 255, 0.82);
+          font-size: 15px;
           line-height: 2.2;
+          font-weight: 300;
         }
 
-        .hero-button {
-          flex: 0 0 auto;
+        .hero-actions {
+          display: flex;
+          align-items: center;
+          gap: 28px;
+          margin-top: 35px;
+        }
+
+        .button {
+          min-height: 52px;
+          padding: 0 21px;
           display: inline-flex;
           align-items: center;
-          gap: 12px;
-          padding: 15px 20px;
-          border: 1px solid rgba(255, 255, 255, 0.35);
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.07);
-          backdrop-filter: blur(8px);
-          font-size: 11px;
-          font-weight: 600;
-          transition: background 0.2s ease, color 0.2s ease;
+          justify-content: center;
+          gap: 11px;
+          font-size: 13px;
+          transition:
+            transform 0.25s ease,
+            background 0.25s ease,
+            color 0.25s ease;
         }
 
-        .hero-button:hover {
-          background: white;
+        .button:hover {
+          transform: translateY(-2px);
+        }
+
+        .button-light {
+          background: var(--white);
           color: var(--ink);
         }
 
-        /* TRUST */
-
-        .trust {
-          border-bottom: 1px solid var(--line);
-          background: var(--paper);
+        .button-light:hover {
+          background: #eee8df;
         }
 
-        .trust-inner {
-          min-height: 120px;
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
+        .text-link {
+          display: inline-flex;
+          flex-direction: column;
+          gap: 6px;
+          font-size: 13px;
         }
 
-        .trust-item {
+        .text-link span {
+          width: 100%;
+          height: 1px;
+          background: currentColor;
+          opacity: 0.6;
+        }
+
+        .light-link {
+          color: rgba(255, 255, 255, 0.86);
+        }
+
+        .hero-bottom {
+          position: absolute;
+          right: 24px;
+          bottom: 45px;
+          left: 24px;
+          display: flex;
+          justify-content: space-between;
+          color: rgba(255, 255, 255, 0.53);
+          font-family: var(--font-cormorant), serif;
+          font-size: 11px;
+          letter-spacing: 0.17em;
+        }
+
+        .scroll-indicator {
+          position: absolute;
+          right: 27px;
+          bottom: 40%;
+          z-index: 3;
           display: flex;
           align-items: center;
-          justify-content: center;
-          gap: 13px;
-          padding: 25px;
-          border-left: 1px solid var(--line);
-        }
-
-        .trust-item:last-child {
-          border-left: 0;
-        }
-
-        .trust-icon {
-          color: var(--gold);
-        }
-
-        .trust-title {
-          margin: 0;
-          font-size: 12px;
-          font-weight: 600;
-        }
-
-        .trust-text {
-          margin: 4px 0 0;
-          color: var(--muted);
+          gap: 8px;
+          color: rgba(255, 255, 255, 0.65);
+          writing-mode: vertical-rl;
+          font-family: var(--font-cormorant), serif;
           font-size: 10px;
+          letter-spacing: 0.18em;
         }
 
-        /* SERVICES */
+        /* ---------------------------------------------------------------- */
+        /* Intro                                                             */
+        /* ---------------------------------------------------------------- */
+
+        .intro-strip {
+          padding: 46px 0;
+          background: var(--cream-deep);
+        }
+
+        .intro-grid {
+          display: grid;
+          grid-template-columns: 100px 1fr 180px;
+          align-items: center;
+          gap: 40px;
+        }
+
+        .intro-number,
+        .section-index {
+          font-family: var(--font-cormorant), serif;
+          font-size: 12px;
+          letter-spacing: 0.15em;
+          color: var(--muted);
+        }
+
+        .intro-text {
+          max-width: 690px;
+          margin: 0;
+          font-size: clamp(17px, 2vw, 22px);
+          line-height: 2;
+          font-weight: 300;
+        }
+
+        .intro-text strong {
+          font-weight: 500;
+        }
+
+        .intro-signature {
+          display: flex;
+          flex-direction: column;
+          text-align: left;
+        }
+
+        .intro-signature .en-display {
+          font-size: 36px;
+          line-height: 0.8;
+        }
+
+        .intro-signature small {
+          margin-top: 9px;
+          font-family: var(--font-cormorant), serif;
+          font-size: 9px;
+          letter-spacing: 0.14em;
+          color: var(--muted);
+          text-transform: uppercase;
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* Section heading                                                   */
+        /* ---------------------------------------------------------------- */
+
+        .section-heading,
+        .gallery-heading {
+          display: grid;
+          grid-template-columns: 1.3fr 0.7fr;
+          gap: 80px;
+          align-items: end;
+          margin-bottom: 70px;
+        }
+
+        .section-title {
+          margin: 22px 0 0;
+          font-size: clamp(40px, 5.1vw, 67px);
+          line-height: 1.3;
+          font-weight: 400;
+        }
+
+        .section-intro,
+        .gallery-heading > p {
+          margin: 0 0 4px;
+          color: var(--muted);
+          font-size: 14px;
+          line-height: 2.2;
+          font-weight: 300;
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* Services                                                          */
+        /* ---------------------------------------------------------------- */
 
         .services {
           background: var(--paper);
         }
 
-        .services-top {
-          display: flex;
-          align-items: flex-end;
-          justify-content: space-between;
-          gap: 40px;
-          margin-bottom: 65px;
+        .services-list {
+          border-top: 1px solid var(--line);
         }
 
-        .services-note {
-          max-width: 240px;
-          padding-bottom: 6px;
-          color: var(--muted);
-          font-size: 11px;
-          line-height: 2;
-        }
-
-        .service-grid {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 70px 30px;
-        }
-
-        .service-card:nth-child(2) {
-          margin-top: 90px;
-        }
-
-        .service-card:nth-child(4) {
-          margin-top: 40px;
-        }
-
-        .service-image-wrap {
+        .service-row {
           position: relative;
-          overflow: hidden;
-          aspect-ratio: 1.18;
-          background: #e4ded6;
+          min-height: 205px;
+          display: grid;
+          grid-template-columns: 65px 230px minmax(0, 1fr) 40px;
+          gap: 30px;
+          align-items: center;
+          padding: 28px 0;
+          border-bottom: 1px solid var(--line);
+          transition: padding 0.3s ease;
         }
 
-        .service-image {
-          width: 100%;
-          height: 100%;
-          display: block;
-          object-fit: cover;
-          transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-        }
-
-        .service-card:hover .service-image {
-          transform: scale(1.045);
+        .service-row:hover {
+          padding-inline: 12px;
         }
 
         .service-number {
-          position: absolute;
-          z-index: 2;
-          top: 18px;
-          right: 18px;
-          width: 42px;
-          height: 42px;
-          display: grid;
-          place-items: center;
-          border: 1px solid rgba(255, 255, 255, 0.5);
-          border-radius: 50%;
-          background: rgba(28, 24, 21, 0.2);
-          backdrop-filter: blur(6px);
-          color: white;
+          align-self: start;
+          padding-top: 9px;
           font-family: var(--font-cormorant), serif;
-          font-size: 17px;
-          direction: ltr;
+          color: var(--muted);
+          font-size: 13px;
+          letter-spacing: 0.08em;
         }
 
-        .service-info {
-          display: grid;
-          grid-template-columns: 1fr auto;
-          gap: 20px;
-          padding-top: 20px;
+        .service-image {
+          height: 150px;
+          overflow: hidden;
         }
 
-        .service-title {
-          margin: 0;
-          font-size: clamp(20px, 2vw, 27px);
-          font-weight: 600;
+        .service-image img {
+          height: 100%;
+          object-fit: cover;
+          filter: saturate(0.72);
+          transition:
+            transform 0.6s ease,
+            filter 0.6s ease;
+        }
+
+        .service-row:hover .service-image img {
+          transform: scale(1.04);
+          filter: saturate(0.92);
+        }
+
+        .service-content {
+          padding-inline: 5px;
+        }
+
+        .service-english {
+          color: var(--gold);
+        }
+
+        .service-content h3 {
+          margin: 9px 0 9px;
+          font-size: clamp(21px, 2vw, 28px);
+          font-weight: 500;
           letter-spacing: -0.035em;
         }
 
-        .service-en {
-          margin-top: 4px;
-          font-family: var(--font-cormorant), serif;
-          color: var(--gold);
-          font-size: 14px;
-          letter-spacing: 0.09em;
-          direction: ltr;
+        .service-content p {
+          max-width: 550px;
+          margin: 0;
+          color: var(--muted);
+          font-size: 13px;
+          line-height: 2;
+          font-weight: 300;
         }
 
-        .service-description {
-          max-width: 340px;
-          margin: 9px 0 0;
-          color: var(--muted);
-          font-size: 11px;
-          line-height: 2;
+        .service-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 16px;
+          font-size: 12px;
+          color: var(--ink-soft);
+        }
+
+        .service-link svg {
+          transition: transform 0.25s ease;
+        }
+
+        .service-link:hover svg {
+          transform: translateX(-4px);
         }
 
         .service-arrow {
-          width: 43px;
-          height: 43px;
-          display: grid;
-          place-items: center;
-          border: 1px solid var(--line);
-          border-radius: 50%;
-          transition: background 0.2s ease, color 0.2s ease;
+          color: var(--muted);
+          transition:
+            transform 0.3s ease,
+            color 0.3s ease;
         }
 
-        .service-card:hover .service-arrow {
-          background: var(--ink);
-          color: white;
+        .service-row:hover .service-arrow {
+          transform: translate(-3px, -3px);
+          color: var(--ink);
         }
 
-        /* ABOUT */
+        /* ---------------------------------------------------------------- */
+        /* About                                                             */
+        /* ---------------------------------------------------------------- */
 
         .about {
-          background: var(--cream-2);
+          position: relative;
+          background: var(--cream-deep);
+        }
+
+        .about-decoration {
+          position: absolute;
+          right: -25px;
+          bottom: -100px;
+          color: rgba(39, 34, 31, 0.035);
+          font-family: var(--font-cormorant), serif;
+          font-size: 420px;
+          line-height: 1;
+          pointer-events: none;
         }
 
         .about-grid {
+          position: relative;
+          z-index: 1;
           display: grid;
-          grid-template-columns: 0.95fr 1.05fr;
+          grid-template-columns: 0.9fr 1.1fr;
+          gap: 100px;
           align-items: center;
-          gap: clamp(50px, 9vw, 130px);
+        }
+
+        .about-image-wrap {
+          position: relative;
         }
 
         .about-image {
-          position: relative;
-          min-height: 650px;
+          height: 650px;
           overflow: hidden;
         }
 
         .about-image img {
-          width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: center;
+          filter: saturate(0.72);
         }
 
-        .about-badge {
-          position: absolute;
-          right: -1px;
-          bottom: -1px;
-          width: 165px;
-          padding: 25px 20px;
-          background: var(--cream-2);
-        }
-
-        .about-badge-number {
-          font-family: var(--font-cormorant), serif;
-          font-size: 50px;
-          line-height: 0.9;
-          direction: ltr;
-        }
-
-        .about-badge-text {
-          margin-top: 10px;
+        .about-caption {
+          display: flex;
+          justify-content: space-between;
+          padding-top: 13px;
           color: var(--muted);
+          font-family: var(--font-cormorant), serif;
           font-size: 10px;
-          line-height: 1.8;
-        }
-
-        .about-copy {
-          max-width: 560px;
+          letter-spacing: 0.14em;
         }
 
         .about-title {
-          margin: 18px 0 28px;
-          font-size: clamp(36px, 5vw, 67px);
-          line-height: 1.25;
-          font-weight: 500;
-          letter-spacing: -0.06em;
+          margin: 23px 0 27px;
+          font-size: clamp(39px, 4.6vw, 62px);
+          line-height: 1.35;
         }
 
-        .about-text {
-          color: var(--muted);
-          font-size: 13px;
-          line-height: 2.25;
+        .about-description {
+          max-width: 570px;
+          margin: 0;
+          color: var(--ink-soft);
+          font-size: 14px;
+          line-height: 2.35;
+          font-weight: 300;
         }
 
-        .about-points {
+        .about-values {
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 20px;
-          margin-top: 38px;
-        }
-
-        .about-point {
-          padding-top: 17px;
+          grid-template-columns: 1fr 1fr;
+          margin-top: 50px;
           border-top: 1px solid var(--line);
+          border-right: 1px solid var(--line);
         }
 
-        .about-point strong {
-          display: block;
-          font-size: 12px;
-          font-weight: 600;
+        .about-values > div {
+          min-height: 135px;
+          padding: 21px 23px;
+          border-left: 1px solid var(--line);
+          border-bottom: 1px solid var(--line);
         }
 
-        .about-point span {
+        .about-values span {
           display: block;
-          margin-top: 6px;
+          margin-bottom: 15px;
           color: var(--muted);
-          font-size: 10px;
+          font-family: var(--font-cormorant), serif;
+          font-size: 11px;
         }
 
-        /* GALLERY */
+        .about-values strong {
+          display: block;
+          margin-bottom: 6px;
+          font-size: 15px;
+          font-weight: 500;
+        }
+
+        .about-values p {
+          margin: 0;
+          color: var(--muted);
+          font-size: 11px;
+          line-height: 1.9;
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* Gallery                                                           */
+        /* ---------------------------------------------------------------- */
 
         .gallery {
           background: var(--paper);
         }
 
-        .gallery-heading {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-          gap: 30px;
-          margin-bottom: 60px;
-        }
-
-        .gallery-title {
-          margin: 18px 0 0;
-          font-size: clamp(35px, 5vw, 67px);
-          font-weight: 500;
-          letter-spacing: -0.055em;
-        }
-
-        .gallery-en {
-          margin-bottom: 8px;
-          font-family: var(--font-cormorant), serif;
-          color: var(--gold);
-          font-size: 15px;
-          letter-spacing: 0.12em;
-          direction: ltr;
-        }
-
         .gallery-grid {
           display: grid;
-          grid-template-columns: 1.1fr 0.72fr 1fr;
-          grid-template-rows: 260px 260px;
+          grid-template-columns: repeat(12, 1fr);
+          grid-template-rows: 270px 390px;
           gap: 14px;
         }
 
         .gallery-item {
           position: relative;
           overflow: hidden;
-          background: #e5dfd8;
+          background: var(--cream-deep);
         }
 
-        .gallery-item:nth-child(1) {
-          grid-row: span 2;
+        .gallery-item-1 {
+          grid-column: span 7;
+          grid-row: span 1;
         }
 
-        .gallery-item:nth-child(2) {
-          grid-row: span 2;
+        .gallery-item-2 {
+          grid-column: span 5;
         }
 
-        .gallery-item:nth-child(3) {
-          grid-column: 3;
+        .gallery-item-3 {
+          grid-column: span 5;
         }
 
-        .gallery-item:nth-child(4) {
-          grid-column: 3;
+        .gallery-item-4 {
+          grid-column: span 7;
         }
 
         .gallery-item img {
-          width: 100%;
           height: 100%;
-          display: block;
           object-fit: cover;
-          transition: transform 0.7s ease;
+          filter: saturate(0.72);
+          transition:
+            transform 0.8s ease,
+            filter 0.8s ease;
         }
 
         .gallery-item:hover img {
-          transform: scale(1.05);
+          transform: scale(1.035);
+          filter: saturate(0.95);
         }
 
-        /* CONTACT */
+        .gallery-index {
+          position: absolute;
+          right: 16px;
+          bottom: 14px;
+          color: rgba(255, 255, 255, 0.82);
+          font-family: var(--font-cormorant), serif;
+          font-size: 12px;
+          letter-spacing: 0.08em;
+          text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* Contact                                                           */
+        /* ---------------------------------------------------------------- */
 
         .contact {
+          position: relative;
+          overflow: hidden;
           background: var(--dark);
-          color: white;
+          color: var(--white);
+        }
+
+        .contact-bg-word {
+          position: absolute;
+          top: 25px;
+          right: -35px;
+          color: rgba(255, 255, 255, 0.025);
+          font-size: clamp(180px, 28vw, 390px);
+          line-height: 0.8;
+          pointer-events: none;
         }
 
         .contact-grid {
+          position: relative;
+          z-index: 1;
           display: grid;
-          grid-template-columns: 1fr 0.75fr;
-          gap: 90px;
-          align-items: end;
+          grid-template-columns: 1fr 0.82fr;
+          gap: 110px;
+          align-items: start;
+        }
+
+        .light-index {
+          color: rgba(255, 255, 255, 0.42);
         }
 
         .contact-title {
-          max-width: 670px;
-          margin: 18px 0 25px;
-          white-space: pre-line;
-          font-size: clamp(40px, 6vw, 80px);
-          line-height: 1.18;
-          font-weight: 500;
-          letter-spacing: -0.06em;
+          margin: 24px 0 27px;
+          font-size: clamp(42px, 5vw, 67px);
+          line-height: 1.35;
+          font-weight: 400;
         }
 
-        .contact-text {
-          max-width: 500px;
+        .contact-intro > p {
+          max-width: 480px;
           margin: 0;
-          color: rgba(255, 255, 255, 0.62);
-          font-size: 12px;
-          line-height: 2.1;
+          color: rgba(255, 255, 255, 0.58);
+          font-size: 14px;
+          line-height: 2.3;
+          font-weight: 300;
         }
 
-        .contact-list {
+        .contact-details {
           border-top: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        .contact-row {
-          display: flex;
+        .contact-item {
+          min-height: 92px;
+          display: grid;
+          grid-template-columns: 40px 1fr 22px;
           align-items: center;
-          justify-content: space-between;
-          gap: 20px;
-          padding: 19px 0;
+          gap: 15px;
           border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+          transition: padding 0.25s ease;
         }
 
-        .contact-label {
-          color: rgba(255, 255, 255, 0.5);
-          font-size: 10px;
+        .contact-item:hover {
+          padding-inline: 8px;
         }
 
-        .contact-value {
-          text-align: left;
-          font-size: 12px;
-          direction: ltr;
-        }
-
-        .contact-value.rtl {
-          direction: rtl;
-        }
-
-        .contact-actions {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-top: 28px;
-        }
-
-        .contact-button {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 9px;
-          min-height: 46px;
-          padding: 0 18px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 999px;
-          font-size: 10px;
-          transition: background 0.2s ease, color 0.2s ease;
-        }
-
-        .contact-button.primary {
-          background: white;
-          color: var(--dark);
-          border-color: white;
-        }
-
-        .contact-button:hover {
-          background: white;
-          color: var(--dark);
-        }
-
-        /* FOOTER */
-
-        .footer {
-          background: var(--dark);
-          color: white;
-          padding: 35px 0 95px;
-        }
-
-        .footer-inner {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 30px;
-          padding-top: 25px;
-          border-top: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .footer-copy {
-          color: rgba(255, 255, 255, 0.42);
-          font-size: 9px;
-        }
-
-        .footer-social {
-          display: flex;
-          gap: 10px;
-        }
-
-        .footer-social a {
+        .contact-icon {
           width: 34px;
           height: 34px;
           display: grid;
           place-items: center;
-          border: 1px solid rgba(255, 255, 255, 0.16);
+          border: 1px solid rgba(255, 255, 255, 0.17);
           border-radius: 50%;
-          transition: background 0.2s ease;
+          color: rgba(255, 255, 255, 0.75);
         }
 
-        .footer-social a:hover {
-          background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* MOBILE CTA */
-
-        .mobile-cta {
-          position: fixed;
-          z-index: 30;
-          right: 16px;
-          bottom: 16px;
-          left: 16px;
-          display: none;
-        }
-
-        .mobile-cta a {
-          width: 100%;
-          min-height: 53px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          border-radius: 999px;
-          background: var(--dark);
-          color: white;
-          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
-          font-size: 11px;
-          font-weight: 600;
-        }
-
-        /* MOBILE MENU */
-
-        .mobile-menu {
-          position: fixed;
-          z-index: 50;
-          inset: 0;
+        .contact-info {
           display: flex;
           flex-direction: column;
-          padding: 28px 22px;
-          background: var(--dark);
-          color: white;
-          transform: translateY(-100%);
-          transition: transform 0.35s ease;
+          gap: 5px;
         }
 
-        .mobile-menu.open {
-          transform: translateY(0);
+        .contact-info small {
+          color: rgba(255, 255, 255, 0.38);
+          font-family: var(--font-cormorant), serif;
+          font-size: 10px;
+          letter-spacing: 0.16em;
         }
 
-        .mobile-menu-top {
+        .contact-info strong {
+          font-size: 14px;
+          font-weight: 400;
+        }
+
+        .contact-item > svg,
+        .contact-address > svg:last-child {
+          color: rgba(255, 255, 255, 0.38);
+        }
+
+        .contact-address {
+          display: grid;
+          grid-template-columns: 40px 1fr 22px;
+          gap: 15px;
+          align-items: start;
+          padding-top: 28px;
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 13px;
+          line-height: 2.1;
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* Footer                                                            */
+        /* ---------------------------------------------------------------- */
+
+        .footer {
+          background: var(--dark-soft);
+          color: var(--white);
+        }
+
+        .footer-top {
+          min-height: 125px;
           display: flex;
           align-items: center;
           justify-content: space-between;
         }
 
-        .mobile-close {
-          width: 42px;
-          height: 42px;
+        .footer-brand {
+          display: flex;
+          align-items: center;
+          gap: 13px;
+        }
+
+        .footer-logo {
+          width: 40px;
+          height: 40px;
           display: grid;
           place-items: center;
           border: 1px solid rgba(255, 255, 255, 0.2);
           border-radius: 50%;
-          background: transparent;
-          color: white;
+          font-family: var(--font-cormorant), serif;
+          font-size: 22px;
         }
 
-        .mobile-links {
+        .footer-brand > div {
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
-          gap: 22px;
-          margin-top: 80px;
+          gap: 5px;
         }
 
-        .mobile-links a {
-          font-size: 28px;
-          font-weight: 500;
-          letter-spacing: -0.04em;
+        .footer-brand strong {
+          font-size: 14px;
+          font-weight: 400;
         }
 
-        .mobile-menu-en {
-          margin-top: auto;
+        .footer-brand span {
+          color: rgba(255, 255, 255, 0.4);
           font-family: var(--font-cormorant), serif;
-          font-size: 17px;
-          letter-spacing: 0.12em;
-          opacity: 0.5;
-          direction: ltr;
+          font-size: 9px;
+          letter-spacing: 0.15em;
         }
 
-        @media (max-width: 900px) {
-          .nav,
-          .header-action {
+        .footer-socials {
+          display: flex;
+          gap: 9px;
+        }
+
+        .footer-socials a {
+          width: 38px;
+          height: 38px;
+          display: grid;
+          place-items: center;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          transition:
+            background 0.25s ease,
+            color 0.25s ease;
+        }
+
+        .footer-socials a:hover {
+          background: var(--white);
+          color: var(--ink);
+        }
+
+        .footer-bottom {
+          min-height: 62px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-top: 1px solid rgba(255, 255, 255, 0.09);
+          color: rgba(255, 255, 255, 0.36);
+          font-family: var(--font-cormorant), serif;
+          font-size: 10px;
+          letter-spacing: 0.11em;
+        }
+
+        .footer-bottom a {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          font-family: var(--font-vazirmatn), sans-serif;
+          font-size: 11px;
+          letter-spacing: 0;
+          transition: color 0.25s ease;
+        }
+
+        .footer-bottom a:hover {
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* Mobile CTA                                                        */
+        /* ---------------------------------------------------------------- */
+
+        .mobile-cta {
+          display: none;
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* Tablet                                                            */
+        /* ---------------------------------------------------------------- */
+
+        @media (max-width: 980px) {
+          .desktop-nav {
+            gap: 22px;
+            padding-inline-start: 30px;
+          }
+
+          .section {
+            padding: 105px 0;
+          }
+
+          .section-heading,
+          .gallery-heading {
+            gap: 50px;
+          }
+
+          .about-grid {
+            gap: 60px;
+          }
+
+          .about-image {
+            height: 560px;
+          }
+
+          .contact-grid {
+            gap: 65px;
+          }
+
+          .service-row {
+            grid-template-columns: 45px 190px minmax(0, 1fr) 25px;
+            gap: 20px;
+          }
+
+          .gallery-grid {
+            grid-template-rows: 230px 320px;
+          }
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* Mobile                                                            */
+        /* ---------------------------------------------------------------- */
+
+        @media (max-width: 720px) {
+          .container {
+            width: min(100% - 34px, 600px);
+          }
+
+          .section {
+            padding: 82px 0;
+          }
+
+          .header-inner {
+            min-height: 76px;
+          }
+
+          .desktop-nav,
+          .header-cta {
             display: none;
           }
 
@@ -973,624 +1663,387 @@ export default function Home() {
             place-items: center;
           }
 
+          .brand-mark {
+            width: 36px;
+            height: 36px;
+          }
+
+          .brand-text strong {
+            font-size: 14px;
+          }
+
+          .mobile-menu {
+            position: absolute;
+            top: 76px;
+            left: 0;
+            width: 100%;
+            padding: 24px 17px 28px;
+            display: block;
+            background: rgba(39, 34, 31, 0.97);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            transform: translateY(-12px);
+            opacity: 0;
+            visibility: hidden;
+            transition:
+              opacity 0.25s ease,
+              transform 0.25s ease,
+              visibility 0.25s ease;
+          }
+
+          .mobile-menu.is-open {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+          }
+
+          .mobile-menu nav {
+            display: flex;
+            flex-direction: column;
+          }
+
+          .mobile-menu nav a {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+          }
+
+          .mobile-menu-contact {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.68);
+            font-size: 12px;
+          }
+
           .hero {
             min-height: 760px;
           }
 
+          .hero-overlay {
+            background:
+              linear-gradient(
+                90deg,
+                rgba(23, 19, 17, 0.75),
+                rgba(23, 19, 17, 0.34)
+              ),
+              linear-gradient(
+                0deg,
+                rgba(23, 19, 17, 0.72),
+                transparent 48%
+              );
+          }
+
           .hero-content {
-            padding-bottom: 80px;
+            min-height: 760px;
+            padding-top: 125px;
+            padding-bottom: 72px;
           }
 
-          .hero-bottom {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 28px;
+          .hero-kicker {
+            margin-bottom: 24px;
           }
 
-          .about-grid,
-          .contact-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .about-image {
-            min-height: 560px;
-          }
-
-          .contact-grid {
-            gap: 55px;
-          }
-        }
-
-        @media (max-width: 700px) {
-          .container,
-          .hero-content {
-            width: min(100% - 28px, 1180px);
-          }
-
-          .header-inner {
-            min-height: 72px;
-          }
-
-          .hero {
-            min-height: 720px;
+          .hero-kicker .en-label {
+            font-size: 10px;
           }
 
           .hero-title {
-            font-size: clamp(43px, 13vw, 68px);
-            line-height: 1.16;
+            font-size: clamp(43px, 13vw, 67px);
+            line-height: 1.3;
+          }
+
+          .hero-description {
+            max-width: 100%;
+            margin-top: 23px;
+            font-size: 13px;
+            line-height: 2.15;
+          }
+
+          .hero-actions {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 19px;
+            margin-top: 29px;
+          }
+
+          .button {
+            min-height: 49px;
+          }
+
+          .hero-bottom {
+            right: 17px;
+            bottom: 24px;
+            left: 17px;
+            font-size: 8px;
+          }
+
+          .hero-bottom span:nth-child(2) {
+            display: none;
+          }
+
+          .scroll-indicator {
+            display: none;
+          }
+
+          .intro-strip {
+            padding: 32px 0;
+          }
+
+          .intro-grid {
+            grid-template-columns: 40px 1fr;
+            gap: 18px;
+          }
+
+          .intro-signature {
+            display: none;
+          }
+
+          .intro-text {
+            font-size: 15px;
+            line-height: 2.15;
+          }
+
+          .section-heading,
+          .gallery-heading {
+            display: block;
+            margin-bottom: 48px;
+          }
+
+          .section-title {
+            margin-top: 18px;
+            font-size: clamp(37px, 11vw, 53px);
+            line-height: 1.35;
+          }
+
+          .section-intro,
+          .gallery-heading > p {
+            margin-top: 25px;
+            font-size: 13px;
+            line-height: 2.15;
+          }
+
+          .service-row {
+            min-height: auto;
+            grid-template-columns: 34px 1fr 22px;
+            gap: 14px;
+            padding: 20px 0 25px;
+          }
+
+          .service-row:hover {
+            padding-inline: 0;
+          }
+
+          .service-number {
+            padding-top: 5px;
+          }
+
+          .service-image {
+            grid-column: 2 / 3;
+            width: 100%;
+            height: 210px;
+            margin-bottom: 3px;
+          }
+
+          .service-content {
+            grid-column: 2 / 4;
+          }
+
+          .service-arrow {
+            grid-column: 3;
+            grid-row: 1;
+            align-self: start;
+            padding-top: 5px;
+          }
+
+          .service-content h3 {
+            font-size: 22px;
+          }
+
+          .service-content p {
+            font-size: 12px;
+            line-height: 2;
+          }
+
+          .about-grid {
+            grid-template-columns: 1fr;
+            gap: 55px;
+          }
+
+          .about-image {
+            height: 470px;
+          }
+
+          .about-title {
+            font-size: clamp(36px, 10vw, 50px);
+            line-height: 1.42;
+          }
+
+          .about-description {
+            font-size: 13px;
+            line-height: 2.25;
+          }
+
+          .about-values {
+            margin-top: 38px;
+          }
+
+          .about-values > div {
+            min-height: 125px;
+            padding: 18px;
+          }
+
+          .about-values strong {
+            font-size: 14px;
+          }
+
+          .about-values p {
+            font-size: 10px;
+          }
+
+          .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 240px 190px 240px;
+            gap: 9px;
+          }
+
+          .gallery-item-1 {
+            grid-column: 1 / -1;
+          }
+
+          .gallery-item-2 {
+            grid-column: 1;
+          }
+
+          .gallery-item-3 {
+            grid-column: 2;
+          }
+
+          .gallery-item-4 {
+            grid-column: 1 / -1;
+          }
+
+          .contact-grid {
+            grid-template-columns: 1fr;
+            gap: 55px;
+          }
+
+          .contact-title {
+            font-size: clamp(38px, 10.5vw, 52px);
+          }
+
+          .contact-intro > p {
+            font-size: 13px;
+          }
+
+          .contact-item {
+            min-height: 83px;
+          }
+
+          .contact-info strong {
+            font-size: 13px;
+          }
+
+          .contact-address {
+            font-size: 12px;
+          }
+
+          .footer-top {
+            min-height: 105px;
+          }
+
+          .footer-bottom {
+            min-height: 60px;
+            gap: 15px;
+          }
+
+          .footer-bottom > span {
+            font-size: 8px;
+          }
+
+          .mobile-cta {
+            position: fixed;
+            right: 12px;
+            bottom: 12px;
+            left: 12px;
+            z-index: 40;
+            min-height: 57px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            overflow: hidden;
+            background: rgba(39, 34, 31, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(15px);
+          }
+
+          .mobile-cta a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: white;
+            font-size: 12px;
+          }
+
+          .mobile-cta a + a {
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
+          }
+
+          .footer {
+            padding-bottom: 65px;
+          }
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* Small mobile                                                      */
+        /* ---------------------------------------------------------------- */
+
+        @media (max-width: 390px) {
+          .container {
+            width: calc(100% - 28px);
+          }
+
+          .hero-title {
+            font-size: 41px;
           }
 
           .hero-description {
             font-size: 12px;
           }
 
-          .trust-inner {
-            grid-template-columns: 1fr;
-          }
-
-          .trust-item {
-            min-height: 76px;
-            justify-content: flex-start;
-            padding: 17px 0;
-            border-left: 0;
-            border-bottom: 1px solid var(--line);
-          }
-
-          .trust-item:last-child {
-            border-bottom: 0;
-          }
-
-          .services-top,
-          .gallery-heading {
-            display: block;
-          }
-
-          .services-note {
-            margin-top: 22px;
-          }
-
-          .service-grid {
-            grid-template-columns: 1fr;
-            gap: 55px;
-          }
-
-          .service-card:nth-child(2),
-          .service-card:nth-child(4) {
-            margin-top: 0;
-          }
-
-          .service-image-wrap {
-            aspect-ratio: 1.05;
-          }
-
-          .service-info {
-            grid-template-columns: 1fr auto;
-          }
-
           .about-image {
-            min-height: 470px;
+            height: 410px;
           }
 
-          .about-badge {
-            width: 145px;
-          }
-
-          .about-points {
-            grid-template-columns: 1fr 1fr;
-          }
-
-          .gallery-en {
-            margin-top: 12px;
+          .about-values > div {
+            min-height: 120px;
+            padding: 15px;
           }
 
           .gallery-grid {
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 250px 190px 190px;
-          }
-
-          .gallery-item:nth-child(1) {
-            grid-row: span 2;
-          }
-
-          .gallery-item:nth-child(2) {
-            grid-row: span 2;
-          }
-
-          .gallery-item:nth-child(3) {
-            grid-column: 1;
-          }
-
-          .gallery-item:nth-child(4) {
-            grid-column: 2;
-          }
-
-          .contact-title {
-            font-size: clamp(38px, 12vw, 58px);
-          }
-
-          .footer {
-            padding-bottom: 100px;
-          }
-
-          .footer-inner {
-            align-items: flex-start;
-            flex-direction: column;
-          }
-
-          .mobile-cta {
-            display: block;
+            grid-template-rows: 210px 165px 210px;
           }
         }
 
-        @media (max-width: 430px) {
-          .brand-en {
-            display: none;
+        /* ---------------------------------------------------------------- */
+        /* Reduced motion                                                    */
+        /* ---------------------------------------------------------------- */
+
+        @media (prefers-reduced-motion: reduce) {
+          html {
+            scroll-behavior: auto;
           }
 
-          .hero {
-            min-height: 690px;
-          }
-
-          .hero-content {
-            padding-top: 140px;
-          }
-
-          .hero-title {
-            font-size: 45px;
-          }
-
-          .section {
-            padding: 75px 0;
-          }
-
-          .gallery-grid {
-            grid-template-columns: 1fr;
-            grid-template-rows: 300px 230px 230px 230px;
-          }
-
-          .gallery-item:nth-child(1),
-          .gallery-item:nth-child(2),
-          .gallery-item:nth-child(3),
-          .gallery-item:nth-child(4) {
-            grid-column: auto;
-            grid-row: auto;
-          }
-
-          .about-points {
-            grid-template-columns: 1fr;
+          *,
+          *::before,
+          *::after {
+            transition-duration: 0.01ms !important;
+            animation-duration: 0.01ms !important;
           }
         }
       `}</style>
-
-      {/* MOBILE MENU */}
-      <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
-        <div className="mobile-menu-top">
-          <div className="brand">
-            <div className="brand-mark">T</div>
-            <div className="brand-copy">
-              <span className="brand-fa">سالن زیبایی طناز</span>
-              <span className="brand-en">TANAZ BEAUTY</span>
-            </div>
-          </div>
-
-          <button
-            className="mobile-close"
-            onClick={closeMenu}
-            aria-label="بستن منو"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        <nav className="mobile-links">
-          <a href="#home" onClick={closeMenu}>
-            خانه
-          </a>
-          <a href="#services" onClick={closeMenu}>
-            خدمات
-          </a>
-          <a href="#about" onClick={closeMenu}>
-            درباره ما
-          </a>
-          <a href="#portfolio" onClick={closeMenu}>
-            نمونه کارها
-          </a>
-          <a href="#contact" onClick={closeMenu}>
-            تماس
-          </a>
-        </nav>
-
-        <div className="mobile-menu-en">BEAUTY · STYLE · YOU</div>
-      </div>
-
-      {/* HEADER */}
-      <header className="header">
-        <div className="container header-inner">
-          <a href="#home" className="brand">
-            <div className="brand-mark">T</div>
-
-            <div className="brand-copy">
-              <span className="brand-fa">سالن زیبایی طناز</span>
-              <span className="brand-en">TANAZ BEAUTY</span>
-            </div>
-          </a>
-
-          <nav className="nav">
-            <a href="#home">خانه</a>
-            <a href="#services">خدمات</a>
-            <a href="#about">درباره ما</a>
-            <a href="#portfolio">نمونه کارها</a>
-            <a href="#contact">تماس</a>
-          </nav>
-
-          <a className="header-action" href="#contact">
-            رزرو نوبت
-            <ArrowUpLeft size={14} />
-          </a>
-
-          <button
-            className="menu-button"
-            onClick={() => setMenuOpen(true)}
-            aria-label="باز کردن منو"
-          >
-            <Menu size={19} />
-          </button>
-        </div>
-      </header>
-
-      {/* HERO */}
-      <section className="hero" id="home">
-        <div className="hero-image" />
-
-        <div className="hero-content">
-          <div className="hero-kicker">
-            <span />
-            BEAUTY · STYLE · YOU
-          </div>
-
-          <h1 className="hero-title fa-display">
-            {"زیبایی تو،\nامضای توست."}
-          </h1>
-
-          <p className="hero-title-en">YOUR BEAUTY, YOUR SIGNATURE</p>
-
-          <div className="hero-bottom">
-            <p className="hero-description">
-              جایی برای زیبایی، آرامش و توجه به جزئیاتی که تو را خاص‌تر می‌کنند.
-              در طناز، هر انتخاب با شناخت سبک و شخصیت تو شکل می‌گیرد.
-            </p>
-
-            <a href="#services" className="hero-button">
-              مشاهده خدمات
-              <ArrowLeft size={15} />
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* TRUST */}
-      <section className="trust">
-        <div className="container trust-inner">
-          <div className="trust-item">
-            <Sparkles className="trust-icon" size={19} strokeWidth={1.4} />
-
-            <div>
-              <p className="trust-title">تجربه تخصصی</p>
-              <p className="trust-text">تمرکز روی کیفیت و ظرافت</p>
-            </div>
-          </div>
-
-          <div className="trust-item">
-            <Star className="trust-icon" size={19} strokeWidth={1.4} />
-
-            <div>
-              <p className="trust-title">استایل شخصی</p>
-              <p className="trust-text">متناسب با چهره و سلیقه شما</p>
-            </div>
-          </div>
-
-          <div className="trust-item">
-            <CalendarDays
-              className="trust-icon"
-              size={19}
-              strokeWidth={1.4}
-            />
-
-            <div>
-              <p className="trust-title">رزرو با هماهنگی</p>
-              <p className="trust-text">برای تجربه‌ای آرام و منظم</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SERVICES */}
-      <section className="section services" id="services">
-        <div className="container">
-          <div className="services-top">
-            <div className="section-heading">
-              <div className="eyebrow">OUR SERVICES</div>
-
-              <h2 className="section-title fa-display">
-                {"هر جزئیات،\nبرای تو طراحی شده است."}
-              </h2>
-            </div>
-
-            <p className="services-note">
-              زیبایی برای ما یک قالب ثابت نیست؛ هر سرویس با توجه به فرم چهره،
-              سبک و خواسته تو شخصی‌سازی می‌شود.
-            </p>
-          </div>
-
-          <div className="service-grid">
-            {services.map((service) => (
-              <article className="service-card" key={service.number}>
-                <div className="service-image-wrap">
-                  <img
-                    className="service-image"
-                    src={service.image}
-                    alt={service.title}
-                    loading="lazy"
-                  />
-
-                  <div className="service-number">{service.number}</div>
-                </div>
-
-                <div className="service-info">
-                  <div>
-                    <h3 className="service-title">{service.title}</h3>
-
-                    <div className="service-en">{service.english}</div>
-
-                    <p className="service-description">
-                      {service.description}
-                    </p>
-                  </div>
-
-                  <div className="service-arrow">
-                    <ArrowUpLeft size={17} strokeWidth={1.4} />
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ABOUT */}
-      <section className="section about" id="about">
-        <div className="container about-grid">
-          <div className="about-image">
-            <img src={images.beauty} alt="سالن زیبایی طناز" loading="lazy" />
-
-            <div className="about-badge">
-              <div className="about-badge-number">T</div>
-              <div className="about-badge-text">
-                TANAZ BEAUTY
-                <br />
-                ISFAHAN
-              </div>
-            </div>
-          </div>
-
-          <div className="about-copy">
-            <div className="eyebrow">ABOUT TANAZ</div>
-
-            <h2 className="about-title fa-display">
-              {"زیبایی، وقتی زیباست\nکه شبیه خودت باشد."}
-            </h2>
-
-            <p className="about-text">
-              سالن زیبایی طناز در سپاهان‌شهر اصفهان، با نگاه به زیبایی طبیعی و
-              استایل شخصی شکل گرفته است. هدف ما این است که نتیجه نهایی فقط
-              زیبا نباشد؛ بلکه با چهره، شخصیت و سبک زندگی تو هماهنگ باشد.
-            </p>
-
-            <div className="about-points">
-              <div className="about-point">
-                <strong>ظرافت</strong>
-                <span>توجه به کوچک‌ترین جزئیات</span>
-              </div>
-
-              <div className="about-point">
-                <strong>تخصص</strong>
-                <span>انتخاب تکنیک متناسب با شما</span>
-              </div>
-
-              <div className="about-point">
-                <strong>آرامش</strong>
-                <span>تجربه‌ای فراتر از یک سرویس زیبایی</span>
-              </div>
-
-              <div className="about-point">
-                <strong>شخصی‌سازی</strong>
-                <span>زیبایی با امضای خودت</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* GALLERY */}
-      <section className="section gallery" id="portfolio">
-        <div className="container">
-          <div className="gallery-heading">
-            <div>
-              <div className="eyebrow">OUR WORK</div>
-
-              <h2 className="gallery-title fa-display">نمونه کارها</h2>
-            </div>
-
-            <div className="gallery-en">A TOUCH OF BEAUTY</div>
-          </div>
-
-          <div className="gallery-grid">
-            <div className="gallery-item">
-              <img src={images.hero} alt="نمونه کار سالن طناز" loading="lazy" />
-            </div>
-
-            <div className="gallery-item">
-              <img
-                src={images.color}
-                alt="نمونه رنگ مو"
-                loading="lazy"
-              />
-            </div>
-
-            <div className="gallery-item">
-              <img
-                src={images.makeup}
-                alt="نمونه میکاپ"
-                loading="lazy"
-              />
-            </div>
-
-            <div className="gallery-item">
-              <img
-                src={images.styling}
-                alt="نمونه استایل مو"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CONTACT */}
-      <section className="section contact" id="contact">
-        <div className="container contact-grid">
-          <div>
-            <div className="eyebrow">BOOK YOUR MOMENT</div>
-
-            <h2 className="contact-title fa-display">
-              {"وقت آن است که\nبرای خودت وقت بگذاری."}
-            </h2>
-
-            <p className="contact-text">
-              برای دریافت مشاوره، اطلاع از قیمت خدمات و هماهنگی زمان مراجعه،
-              از طریق تماس یا پیام با ما در ارتباط باشید.
-            </p>
-
-            <div className="contact-actions">
-              <a
-                className="contact-button primary"
-                href="tel:03136518167"
-              >
-                <Phone size={15} />
-                تماس با سالن
-              </a>
-
-              <a
-                className="contact-button"
-                href="https://t.me/Tanazbeautybot"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <MessageCircle size={15} />
-                تلگرام
-              </a>
-
-              <a
-                className="contact-button"
-                href="https://www.instagram.com/tanazz.beauty/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Instagram size={15} />
-                اینستاگرام
-              </a>
-            </div>
-          </div>
-
-          <div className="contact-list">
-            <div className="contact-row">
-              <span className="contact-label">PHONE</span>
-              <a className="contact-value" href="tel:03136518167">
-                031 3651 8167
-              </a>
-            </div>
-
-            <div className="contact-row">
-              <span className="contact-label">MOBILE</span>
-              <a className="contact-value" href="tel:09307984291">
-                0930 792 8491
-              </a>
-            </div>
-
-            <div className="contact-row">
-              <span className="contact-label">ADDRESS</span>
-              <span className="contact-value rtl">
-                سپاهان‌شهر، بلوار غدیر، مجتمع عقیق ۵
-              </span>
-            </div>
-
-            <div className="contact-row">
-              <span className="contact-label">INSTAGRAM</span>
-              <a
-                className="contact-value"
-                href="https://www.instagram.com/tanazz.beauty/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                @tanazz.beauty
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="footer">
-        <div className="container footer-inner">
-          <div className="footer-copy">
-            © 2026 Tanaz Beauty · All rights reserved.
-          </div>
-
-          <div className="footer-social">
-            <a
-              href="https://www.instagram.com/tanazz.beauty/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-            >
-              <Instagram size={15} />
-            </a>
-
-            <a
-              href="https://t.me/Tanazbeautybot"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Telegram"
-            >
-              <MessageCircle size={15} />
-            </a>
-
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=%D8%B3%D9%BE%D8%A7%D9%87%D8%A7%D9%86%D8%B4%D9%87%D8%B1%20%D8%A8%D9%84%D9%88%D8%A7%D8%B1%20%D8%BA%D8%AF%DB%8C%D8%B1%20%D9%85%D8%AC%D8%AA%D9%85%D8%B9%20%D8%B9%D9%82%DB%8C%D9%82%205"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Google Maps"
-            >
-              <MapPin size={15} />
-            </a>
-          </div>
-        </div>
-      </footer>
-
-      {/* MOBILE CTA */}
-      <div className="mobile-cta">
-        <a href="#contact">
-          <CalendarDays size={16} />
-          رزرو نوبت
-        </a>
-      </div>
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(localBusinessSchema),
-        }}
-      />
     </main>
   );
 }
