@@ -2,34 +2,31 @@
 
 import { useState } from "react";
 import {
+  ArrowLeft,
+  ArrowUpLeft,
+  CalendarDays,
+  ChevronDown,
   Instagram,
   MapPin,
-  Phone,
-  Send,
-  Clock,
-  ArrowUpLeft,
-  Sparkles,
-  Scissors,
-  Palette,
-  Heart,
   Menu,
-  X,
-  ChevronLeft,
+  MessageCircle,
+  Phone,
+  Sparkles,
   Star,
-  Gem,
-  Flower2,
+  X,
 } from "lucide-react";
-
 import { Cormorant_Garamond, Vazirmatn } from "next/font/google";
 
 const vazirmatn = Vazirmatn({
   subsets: ["arabic"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-vazirmatn",
   display: "swap",
 });
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-cormorant",
   display: "swap",
 });
@@ -37,19 +34,50 @@ const cormorant = Cormorant_Garamond({
 const images = {
   hero:
     "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1800&q=90",
-
   color:
     "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=90",
-
   makeup:
     "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1200&q=90",
-
   styling:
     "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1200&q=90",
-
   beauty:
     "https://images.unsplash.com/photo-1487412912498-0447578fcca8?auto=format&fit=crop&w=1200&q=90",
 };
+
+const services = [
+  {
+    number: "01",
+    title: "رنگ و لایت",
+    english: "COLOR & LIGHT",
+    description:
+      "رنگ‌های تخصصی، لایت، بالیاژ و تکنیک‌هایی متناسب با چهره و استایل شما.",
+    image: images.color,
+  },
+  {
+    number: "02",
+    title: "میکاپ",
+    english: "MAKEUP",
+    description:
+      "میکاپ ظریف و حرفه‌ای برای مراسم، مهمانی و لحظه‌هایی که قرار است بدرخشید.",
+    image: images.makeup,
+  },
+  {
+    number: "03",
+    title: "شینیون و استایل",
+    english: "STYLING",
+    description:
+      "استایل مو با تمرکز بر فرم صورت، لباس و شخصیت شما؛ از ساده تا مجلل.",
+    image: images.styling,
+  },
+  {
+    number: "04",
+    title: "خدمات تخصصی زیبایی",
+    english: "BEAUTY",
+    description:
+      "مجموعه‌ای از خدمات زیبایی با تمرکز بر ظرافت، کیفیت و نتیجه‌ای طبیعی.",
+    image: images.beauty,
+  },
+];
 
 const localBusinessSchema = {
   "@context": "https://schema.org",
@@ -61,7 +89,7 @@ const localBusinessSchema = {
     "@type": "PostalAddress",
     streetAddress:
       "سپاهانشهر، بلوار غدیر، مجتمع عقیق ۵، طبقه زیرین، انتهای راهرو، پلاک ۲۲",
-    addressLocality: "اصفهان",
+    addressLocality: "Isfahan",
     addressCountry: "IR",
   },
   sameAs: [
@@ -70,341 +98,1492 @@ const localBusinessSchema = {
   ],
 };
 
-const navIds = ["home", "services", "about", "gallery", "contact"];
-
 export default function Home() {
-  const [isFa, setIsFa] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const t = isFa
-    ? {
-        brand: "Tanaz Beauty",
-
-        nav: [
-          "خانه",
-          "خدمات",
-          "درباره ما",
-          "نمونه‌کارها",
-          "تماس",
-        ],
-
-        heroEyebrow: "سالن زیبایی طناز",
-
-        heroTitle: "زیبایی تو،\nامضای توست.",
-
-        heroText:
-          "جایی برای زیبایی آرام، ظریف و شخصی؛ با خدمات تخصصی مو، میکاپ، ابرو، مژه و ناخن در سپاهانشهر اصفهان.",
-
-        primary: "رزرو وقت",
-
-        secondary: "دیدن خدمات",
-
-        badge: "Beauty · Care · Elegance",
-
-        trust: [
-          "مشاوره تخصصی",
-          "رزرو آسان",
-          "محیط آرام و حرفه‌ای",
-        ],
-
-        servicesEyebrow: "خدمات منتخب",
-
-        servicesTitle:
-          "هر جزئیات،\nبرای تو طراحی شده است.",
-
-        servicesText:
-          "از رنگ و احیای مو تا میکاپ و استایل؛ خدمات ما با توجه به فرم چهره، جنس مو و سبک شخصی شما انجام می‌شوند.",
-
-        services: [
-          {
-            number: "01",
-            title: "رنگ و احیای مو",
-            short: "Hair Color & Care",
-            text:
-              "رنگ، لایت، آمبره و اصلاح رنگ با تمرکز بر سلامت و تناژ طبیعی مو.",
-            icon: Palette,
-            image: images.color,
-          },
-          {
-            number: "02",
-            title: "کوتاهی و براشینگ",
-            short: "Cut & Blow Dry",
-            text:
-              "کوتاهی متناسب با فرم صورت و براشینگ حرفه‌ای برای ظاهری مرتب و خوش‌حالت.",
-            icon: Scissors,
-            image: images.styling,
-          },
-          {
-            number: "03",
-            title: "میکاپ",
-            short: "Makeup",
-            text:
-              "میکاپ ظریف و حرفه‌ای برای مهمانی، مراسم و مناسبت‌های خاص.",
-            icon: Sparkles,
-            image: images.makeup,
-          },
-          {
-            number: "04",
-            title: "شینیون و استایل",
-            short: "Hair Styling",
-            text:
-              "استایل مو و شینیون متناسب با فرم چهره و سبک شخصی شما.",
-            icon: Heart,
-            image: images.styling,
-          },
-          {
-            number: "05",
-            title: "ابرو و مژه",
-            short: "Brows & Lashes",
-            text:
-              "تأکید بر فرم طبیعی چهره برای ظاهری متعادل و ظریف.",
-            icon: Flower2,
-            image: images.beauty,
-          },
-          {
-            number: "06",
-            title: "خدمات ناخن",
-            short: "Nails",
-            text:
-              "مانیکور و طراحی‌های مینیمال برای دست‌هایی مرتب و آراسته.",
-            icon: Gem,
-            image: images.beauty,
-          },
-        ],
-
-        aboutEyebrow: "درباره طناز",
-
-        aboutTitle:
-          "زیبایی، وقتی زیباست\nکه شبیه خودت باشد.",
-
-        aboutText:
-          "در سالن زیبایی طناز، هدف ما تغییر چهره شما نیست؛ بلکه پیدا کردن ظرافتی است که از قبل در چهره و استایل شما وجود دارد.",
-
-        aboutText2:
-          "هر خدمت با توجه به فرم صورت، جنس مو، رنگ پوست و سلیقه شخصی شما طراحی می‌شود تا نتیجه‌ای طبیعی، تمیز و ماندگار داشته باشد.",
-
-        aboutButton: "مشاوره با سالن",
-
-        galleryEyebrow: "فضای طناز",
-
-        galleryTitle:
-          "زیبایی، در جزئیات اتفاق می‌افتد.",
-
-        galleryText:
-          "فضایی آرام، جزئیات ظریف و نگاهی دقیق به زیبایی؛ تجربه‌ای که از لحظه ورود شروع می‌شود.",
-
-        bookingEyebrow: "رزرو و ارتباط",
-
-        bookingTitle:
-          "وقت آن است که\nبرای خودت وقت بگذاری.",
-
-        bookingText:
-          "برای مشاهده زمان‌های خالی و رزرو نوبت از طریق تلگرام با ما در ارتباط باشید یا برای مشاوره مستقیم با سالن تماس بگیرید.",
-
-        telegram: "رزرو در تلگرام",
-
-        call: "تماس با سالن",
-
-        addressTitle: "آدرس",
-
-        address:
-          "سپاهانشهر، بلوار غدیر، مجتمع عقیق ۵، طبقه زیرین، انتهای راهرو، پلاک ۲۲",
-
-        phoneTitle: "شماره تماس",
-
-        instagramTitle: "اینستاگرام",
-
-        hoursTitle: "ساعات کاری",
-
-        hours: "با هماهنگی قبلی",
-
-        footer: "سالن زیبایی طناز",
-
-        language: "EN",
-      }
-    : {
-        brand: "Tanaz Beauty",
-
-        nav: [
-          "Home",
-          "Services",
-          "About",
-          "Portfolio",
-          "Contact",
-        ],
-
-        heroEyebrow: "Tanaz Beauty Salon",
-
-        heroTitle: "Your beauty,\nyour signature.",
-
-        heroText:
-          "A calm and refined beauty experience in Sepahan Shahr, Isfahan — from hair color and care to makeup, styling, brows, lashes and nails.",
-
-        primary: "Book an Appointment",
-
-        secondary: "Explore Services",
-
-        badge: "Beauty · Care · Elegance",
-
-        trust: [
-          "Expert Consultation",
-          "Easy Booking",
-          "Calm & Professional",
-        ],
-
-        servicesEyebrow: "Selected Services",
-
-        servicesTitle:
-          "Every detail,\nmade for you.",
-
-        servicesText:
-          "From hair color and care to makeup and styling, every service is tailored to your features and personal style.",
-
-        services: [
-          {
-            number: "01",
-            title: "Hair Color & Care",
-            short: "Hair Color & Care",
-            text:
-              "Color, highlights, balayage and correction with attention to hair health.",
-            icon: Palette,
-            image: images.color,
-          },
-          {
-            number: "02",
-            title: "Cut & Blow Dry",
-            short: "Cut & Blow Dry",
-            text:
-              "Face-shape flattering cuts and polished professional blowouts.",
-            icon: Scissors,
-            image: images.styling,
-          },
-          {
-            number: "03",
-            title: "Makeup",
-            short: "Makeup",
-            text:
-              "Elegant professional makeup for events and special occasions.",
-            icon: Sparkles,
-            image: images.makeup,
-          },
-          {
-            number: "04",
-            title: "Hair Styling",
-            short: "Hair Styling",
-            text:
-              "Elegant styling and updos designed around your features.",
-            icon: Heart,
-            image: images.styling,
-          },
-          {
-            number: "05",
-            title: "Brows & Lashes",
-            short: "Brows & Lashes",
-            text:
-              "Natural-looking services designed to enhance your features.",
-            icon: Flower2,
-            image: images.beauty,
-          },
-          {
-            number: "06",
-            title: "Nails",
-            short: "Nails",
-            text:
-              "Minimal and elegant manicure and nail designs.",
-            icon: Gem,
-            image: images.beauty,
-          },
-        ],
-
-        aboutEyebrow: "About Tanaz",
-
-        aboutTitle:
-          "Beauty is beautiful\nwhen it still feels like you.",
-
-        aboutText:
-          "At Tanaz Beauty, our goal isn't to change your appearance. It is to reveal the elegance that is already yours.",
-
-        aboutText2:
-          "Every service is adapted to your features, hair type, skin tone and personal style for a clean, natural and lasting result.",
-
-        aboutButton: "Talk to the Salon",
-
-        galleryEyebrow: "The Tanaz Space",
-
-        galleryTitle:
-          "Beauty lives in the details.",
-
-        galleryText:
-          "A calm atmosphere, thoughtful details and a refined approach to beauty — an experience that begins the moment you arrive.",
-
-        bookingEyebrow: "Booking & Contact",
-
-        bookingTitle:
-          "Make some time\nfor yourself.",
-
-        bookingText:
-          "Contact us through Telegram to check availability and book your appointment, or call the salon directly for consultation.",
-
-        telegram: "Book on Telegram",
-
-        call: "Call the Salon",
-
-        addressTitle: "Address",
-
-        address:
-          "Sepahan Shahr, Ghadir Blvd, Aghigh 5 Complex, Lower Floor, End of Hallway, No. 22",
-
-        phoneTitle: "Phone",
-
-        instagramTitle: "Instagram",
-
-        hoursTitle: "Working Hours",
-
-        hours: "By appointment",
-
-        footer: "Tanaz Beauty Salon",
-
-        language: "FA",
-      };
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-
-    setMenuOpen(false);
-  };
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <main
-      dir={isFa ? "rtl" : "ltr"}
-      className={`${vazirmatn.variable} ${cormorant.variable} min-h-screen overflow-x-hidden bg-[#f8f6f2] text-[#302a26]`}
+      dir="rtl"
+      className={`${vazirmatn.variable} ${cormorant.variable} site`}
     >
       <style jsx global>{`
+        :root {
+          --cream: #f7f4ef;
+          --cream-2: #eee9e1;
+          --paper: #fbfaf8;
+          --ink: #25211e;
+          --muted: #77706a;
+          --line: rgba(37, 33, 30, 0.13);
+          --dark: #27221f;
+          --dark-soft: #332c28;
+          --gold: #9d8061;
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
         html {
           scroll-behavior: smooth;
         }
 
         body {
-          font-family: var(--font-vazirmatn), sans-serif;
-          background: #f8f6f2;
-        }
-
-        .display {
+          margin: 0;
+          background: var(--cream);
+          color: var(--ink);
           font-family: var(--font-vazirmatn), sans-serif;
         }
 
-        .latin-display {
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
+
+        button {
+          font: inherit;
+        }
+
+        .site {
+          min-height: 100vh;
+          overflow: hidden;
+          background: var(--cream);
+        }
+
+        .container {
+          width: min(1180px, calc(100% - 40px));
+          margin-inline: auto;
+        }
+
+        .fa-display {
+          font-family: var(--font-vazirmatn), sans-serif;
+        }
+
+        .en-display {
           font-family: var(--font-cormorant), serif;
+          direction: ltr;
         }
 
-        ::selection {
-          background: #302a26;
-          color: #fff;
+        .eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 9px;
+          color: var(--muted);
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.14em;
+          line-height: 1.5;
+        }
+
+        .eyebrow::before {
+          content: "";
+          width: 28px;
+          height: 1px;
+          background: var(--gold);
+        }
+
+        .section {
+          padding: clamp(80px, 9vw, 140px) 0;
+        }
+
+        .section-heading {
+          max-width: 720px;
+        }
+
+        .section-title {
+          margin: 18px 0 0;
+          font-size: clamp(34px, 5vw, 68px);
+          line-height: 1.2;
+          font-weight: 500;
+          letter-spacing: -0.045em;
+        }
+
+        .section-description {
+          max-width: 540px;
+          margin: 24px 0 0;
+          color: var(--muted);
+          font-size: clamp(13px, 1.25vw, 15px);
+          line-height: 2.2;
+          font-weight: 400;
+        }
+
+        /* HEADER */
+
+        .header {
+          position: absolute;
+          z-index: 20;
+          top: 0;
+          left: 0;
+          right: 0;
+          color: white;
+        }
+
+        .header-inner {
+          min-height: 88px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 30px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .brand {
+          display: flex;
+          align-items: center;
+          gap: 13px;
+        }
+
+        .brand-mark {
+          width: 39px;
+          height: 39px;
+          display: grid;
+          place-items: center;
+          border: 1px solid rgba(255, 255, 255, 0.5);
+          border-radius: 50%;
+          font-family: var(--font-cormorant), serif;
+          font-size: 21px;
+          direction: ltr;
+        }
+
+        .brand-copy {
+          display: flex;
+          flex-direction: column;
+          gap: 1px;
+        }
+
+        .brand-fa {
+          font-size: 13px;
+          font-weight: 600;
+        }
+
+        .brand-en {
+          font-family: var(--font-cormorant), serif;
+          font-size: 12px;
+          letter-spacing: 0.13em;
+          direction: ltr;
+          opacity: 0.8;
+        }
+
+        .nav {
+          display: flex;
+          align-items: center;
+          gap: 30px;
+        }
+
+        .nav a {
+          position: relative;
+          padding: 8px 0;
+          font-size: 11px;
+          font-weight: 500;
+          opacity: 0.85;
+          transition: opacity 0.2s ease;
+        }
+
+        .nav a:hover {
+          opacity: 1;
+        }
+
+        .header-action {
+          display: inline-flex;
+          align-items: center;
+          gap: 9px;
+          padding: 11px 17px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 999px;
+          font-size: 10px;
+          font-weight: 600;
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .header-action:hover {
+          background: white;
+          color: var(--ink);
+        }
+
+        .menu-button {
+          display: none;
+          width: 42px;
+          height: 42px;
+          border: 1px solid rgba(255, 255, 255, 0.35);
+          border-radius: 50%;
+          background: transparent;
+          color: white;
+          cursor: pointer;
+        }
+
+        /* HERO */
+
+        .hero {
+          position: relative;
+          min-height: min(860px, 100vh);
+          display: flex;
+          align-items: flex-end;
+          overflow: hidden;
+          color: white;
+          background: #302925;
+        }
+
+        .hero-image {
+          position: absolute;
+          inset: 0;
+          background-image:
+            linear-gradient(
+              180deg,
+              rgba(22, 18, 16, 0.45) 0%,
+              rgba(22, 18, 16, 0.1) 35%,
+              rgba(22, 18, 16, 0.65) 100%
+            ),
+            url("${images.hero}");
+          background-position: center;
+          background-size: cover;
+          transform: scale(1.01);
+        }
+
+        .hero-content {
+          position: relative;
+          z-index: 2;
+          width: min(1180px, calc(100% - 40px));
+          margin-inline: auto;
+          padding: 170px 0 105px;
+        }
+
+        .hero-kicker {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 24px;
+          font-size: 10px;
+          font-weight: 500;
+          letter-spacing: 0.08em;
+        }
+
+        .hero-kicker span {
+          width: 34px;
+          height: 1px;
+          background: rgba(255, 255, 255, 0.7);
+        }
+
+        .hero-title {
+          max-width: 760px;
+          margin: 0;
+          white-space: pre-line;
+          font-size: clamp(46px, 7.4vw, 104px);
+          line-height: 1.1;
+          font-weight: 500;
+          letter-spacing: -0.065em;
+        }
+
+        .hero-title-en {
+          margin: 22px 0 0;
+          font-family: var(--font-cormorant), serif;
+          font-size: clamp(18px, 2vw, 28px);
+          font-weight: 400;
+          letter-spacing: 0.08em;
+          opacity: 0.88;
+          direction: ltr;
+          text-align: right;
+        }
+
+        .hero-bottom {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 40px;
+          margin-top: 54px;
+        }
+
+        .hero-description {
+          max-width: 430px;
+          margin: 0;
+          color: rgba(255, 255, 255, 0.78);
+          font-size: 13px;
+          line-height: 2.2;
+        }
+
+        .hero-button {
+          flex: 0 0 auto;
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 15px 20px;
+          border: 1px solid rgba(255, 255, 255, 0.35);
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.07);
+          backdrop-filter: blur(8px);
+          font-size: 11px;
+          font-weight: 600;
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .hero-button:hover {
+          background: white;
+          color: var(--ink);
+        }
+
+        /* TRUST */
+
+        .trust {
+          border-bottom: 1px solid var(--line);
+          background: var(--paper);
+        }
+
+        .trust-inner {
+          min-height: 120px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .trust-item {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 13px;
+          padding: 25px;
+          border-left: 1px solid var(--line);
+        }
+
+        .trust-item:last-child {
+          border-left: 0;
+        }
+
+        .trust-icon {
+          color: var(--gold);
+        }
+
+        .trust-title {
+          margin: 0;
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .trust-text {
+          margin: 4px 0 0;
+          color: var(--muted);
+          font-size: 10px;
+        }
+
+        /* SERVICES */
+
+        .services {
+          background: var(--paper);
+        }
+
+        .services-top {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 40px;
+          margin-bottom: 65px;
+        }
+
+        .services-note {
+          max-width: 240px;
+          padding-bottom: 6px;
+          color: var(--muted);
+          font-size: 11px;
+          line-height: 2;
+        }
+
+        .service-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 70px 30px;
+        }
+
+        .service-card:nth-child(2) {
+          margin-top: 90px;
+        }
+
+        .service-card:nth-child(4) {
+          margin-top: 40px;
+        }
+
+        .service-image-wrap {
+          position: relative;
+          overflow: hidden;
+          aspect-ratio: 1.18;
+          background: #e4ded6;
+        }
+
+        .service-image {
+          width: 100%;
+          height: 100%;
+          display: block;
+          object-fit: cover;
+          transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+        }
+
+        .service-card:hover .service-image {
+          transform: scale(1.045);
+        }
+
+        .service-number {
+          position: absolute;
+          z-index: 2;
+          top: 18px;
+          right: 18px;
+          width: 42px;
+          height: 42px;
+          display: grid;
+          place-items: center;
+          border: 1px solid rgba(255, 255, 255, 0.5);
+          border-radius: 50%;
+          background: rgba(28, 24, 21, 0.2);
+          backdrop-filter: blur(6px);
+          color: white;
+          font-family: var(--font-cormorant), serif;
+          font-size: 17px;
+          direction: ltr;
+        }
+
+        .service-info {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 20px;
+          padding-top: 20px;
+        }
+
+        .service-title {
+          margin: 0;
+          font-size: clamp(20px, 2vw, 27px);
+          font-weight: 600;
+          letter-spacing: -0.035em;
+        }
+
+        .service-en {
+          margin-top: 4px;
+          font-family: var(--font-cormorant), serif;
+          color: var(--gold);
+          font-size: 14px;
+          letter-spacing: 0.09em;
+          direction: ltr;
+        }
+
+        .service-description {
+          max-width: 340px;
+          margin: 9px 0 0;
+          color: var(--muted);
+          font-size: 11px;
+          line-height: 2;
+        }
+
+        .service-arrow {
+          width: 43px;
+          height: 43px;
+          display: grid;
+          place-items: center;
+          border: 1px solid var(--line);
+          border-radius: 50%;
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .service-card:hover .service-arrow {
+          background: var(--ink);
+          color: white;
+        }
+
+        /* ABOUT */
+
+        .about {
+          background: var(--cream-2);
+        }
+
+        .about-grid {
+          display: grid;
+          grid-template-columns: 0.95fr 1.05fr;
+          align-items: center;
+          gap: clamp(50px, 9vw, 130px);
+        }
+
+        .about-image {
+          position: relative;
+          min-height: 650px;
+          overflow: hidden;
+        }
+
+        .about-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .about-badge {
+          position: absolute;
+          right: -1px;
+          bottom: -1px;
+          width: 165px;
+          padding: 25px 20px;
+          background: var(--cream-2);
+        }
+
+        .about-badge-number {
+          font-family: var(--font-cormorant), serif;
+          font-size: 50px;
+          line-height: 0.9;
+          direction: ltr;
+        }
+
+        .about-badge-text {
+          margin-top: 10px;
+          color: var(--muted);
+          font-size: 10px;
+          line-height: 1.8;
+        }
+
+        .about-copy {
+          max-width: 560px;
+        }
+
+        .about-title {
+          margin: 18px 0 28px;
+          font-size: clamp(36px, 5vw, 67px);
+          line-height: 1.25;
+          font-weight: 500;
+          letter-spacing: -0.06em;
+        }
+
+        .about-text {
+          color: var(--muted);
+          font-size: 13px;
+          line-height: 2.25;
+        }
+
+        .about-points {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+          margin-top: 38px;
+        }
+
+        .about-point {
+          padding-top: 17px;
+          border-top: 1px solid var(--line);
+        }
+
+        .about-point strong {
+          display: block;
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .about-point span {
+          display: block;
+          margin-top: 6px;
+          color: var(--muted);
+          font-size: 10px;
+        }
+
+        /* GALLERY */
+
+        .gallery {
+          background: var(--paper);
+        }
+
+        .gallery-heading {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          gap: 30px;
+          margin-bottom: 60px;
+        }
+
+        .gallery-title {
+          margin: 18px 0 0;
+          font-size: clamp(35px, 5vw, 67px);
+          font-weight: 500;
+          letter-spacing: -0.055em;
+        }
+
+        .gallery-en {
+          margin-bottom: 8px;
+          font-family: var(--font-cormorant), serif;
+          color: var(--gold);
+          font-size: 15px;
+          letter-spacing: 0.12em;
+          direction: ltr;
+        }
+
+        .gallery-grid {
+          display: grid;
+          grid-template-columns: 1.1fr 0.72fr 1fr;
+          grid-template-rows: 260px 260px;
+          gap: 14px;
+        }
+
+        .gallery-item {
+          position: relative;
+          overflow: hidden;
+          background: #e5dfd8;
+        }
+
+        .gallery-item:nth-child(1) {
+          grid-row: span 2;
+        }
+
+        .gallery-item:nth-child(2) {
+          grid-row: span 2;
+        }
+
+        .gallery-item:nth-child(3) {
+          grid-column: 3;
+        }
+
+        .gallery-item:nth-child(4) {
+          grid-column: 3;
+        }
+
+        .gallery-item img {
+          width: 100%;
+          height: 100%;
+          display: block;
+          object-fit: cover;
+          transition: transform 0.7s ease;
+        }
+
+        .gallery-item:hover img {
+          transform: scale(1.05);
+        }
+
+        /* CONTACT */
+
+        .contact {
+          background: var(--dark);
+          color: white;
+        }
+
+        .contact-grid {
+          display: grid;
+          grid-template-columns: 1fr 0.75fr;
+          gap: 90px;
+          align-items: end;
+        }
+
+        .contact-title {
+          max-width: 670px;
+          margin: 18px 0 25px;
+          white-space: pre-line;
+          font-size: clamp(40px, 6vw, 80px);
+          line-height: 1.18;
+          font-weight: 500;
+          letter-spacing: -0.06em;
+        }
+
+        .contact-text {
+          max-width: 500px;
+          margin: 0;
+          color: rgba(255, 255, 255, 0.62);
+          font-size: 12px;
+          line-height: 2.1;
+        }
+
+        .contact-list {
+          border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .contact-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+          padding: 19px 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .contact-label {
+          color: rgba(255, 255, 255, 0.5);
+          font-size: 10px;
+        }
+
+        .contact-value {
+          text-align: left;
+          font-size: 12px;
+          direction: ltr;
+        }
+
+        .contact-value.rtl {
+          direction: rtl;
+        }
+
+        .contact-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 28px;
+        }
+
+        .contact-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 9px;
+          min-height: 46px;
+          padding: 0 18px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 999px;
+          font-size: 10px;
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .contact-button.primary {
+          background: white;
+          color: var(--dark);
+          border-color: white;
+        }
+
+        .contact-button:hover {
+          background: white;
+          color: var(--dark);
+        }
+
+        /* FOOTER */
+
+        .footer {
+          background: var(--dark);
+          color: white;
+          padding: 35px 0 95px;
+        }
+
+        .footer-inner {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 30px;
+          padding-top: 25px;
+          border-top: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .footer-copy {
+          color: rgba(255, 255, 255, 0.42);
+          font-size: 9px;
+        }
+
+        .footer-social {
+          display: flex;
+          gap: 10px;
+        }
+
+        .footer-social a {
+          width: 34px;
+          height: 34px;
+          display: grid;
+          place-items: center;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          border-radius: 50%;
+          transition: background 0.2s ease;
+        }
+
+        .footer-social a:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* MOBILE CTA */
+
+        .mobile-cta {
+          position: fixed;
+          z-index: 30;
+          right: 16px;
+          bottom: 16px;
+          left: 16px;
+          display: none;
+        }
+
+        .mobile-cta a {
+          width: 100%;
+          min-height: 53px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          border-radius: 999px;
+          background: var(--dark);
+          color: white;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+          font-size: 11px;
+          font-weight: 600;
+        }
+
+        /* MOBILE MENU */
+
+        .mobile-menu {
+          position: fixed;
+          z-index: 50;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          padding: 28px 22px;
+          background: var(--dark);
+          color: white;
+          transform: translateY(-100%);
+          transition: transform 0.35s ease;
+        }
+
+        .mobile-menu.open {
+          transform: translateY(0);
+        }
+
+        .mobile-menu-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .mobile-close {
+          width: 42px;
+          height: 42px;
+          display: grid;
+          place-items: center;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 50%;
+          background: transparent;
+          color: white;
+        }
+
+        .mobile-links {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 22px;
+          margin-top: 80px;
+        }
+
+        .mobile-links a {
+          font-size: 28px;
+          font-weight: 500;
+          letter-spacing: -0.04em;
+        }
+
+        .mobile-menu-en {
+          margin-top: auto;
+          font-family: var(--font-cormorant), serif;
+          font-size: 17px;
+          letter-spacing: 0.12em;
+          opacity: 0.5;
+          direction: ltr;
+        }
+
+        @media (max-width: 900px) {
+          .nav,
+          .header-action {
+            display: none;
+          }
+
+          .menu-button {
+            display: grid;
+            place-items: center;
+          }
+
+          .hero {
+            min-height: 760px;
+          }
+
+          .hero-content {
+            padding-bottom: 80px;
+          }
+
+          .hero-bottom {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 28px;
+          }
+
+          .about-grid,
+          .contact-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .about-image {
+            min-height: 560px;
+          }
+
+          .contact-grid {
+            gap: 55px;
+          }
+        }
+
+        @media (max-width: 700px) {
+          .container,
+          .hero-content {
+            width: min(100% - 28px, 1180px);
+          }
+
+          .header-inner {
+            min-height: 72px;
+          }
+
+          .hero {
+            min-height: 720px;
+          }
+
+          .hero-title {
+            font-size: clamp(43px, 13vw, 68px);
+            line-height: 1.16;
+          }
+
+          .hero-description {
+            font-size: 12px;
+          }
+
+          .trust-inner {
+            grid-template-columns: 1fr;
+          }
+
+          .trust-item {
+            min-height: 76px;
+            justify-content: flex-start;
+            padding: 17px 0;
+            border-left: 0;
+            border-bottom: 1px solid var(--line);
+          }
+
+          .trust-item:last-child {
+            border-bottom: 0;
+          }
+
+          .services-top,
+          .gallery-heading {
+            display: block;
+          }
+
+          .services-note {
+            margin-top: 22px;
+          }
+
+          .service-grid {
+            grid-template-columns: 1fr;
+            gap: 55px;
+          }
+
+          .service-card:nth-child(2),
+          .service-card:nth-child(4) {
+            margin-top: 0;
+          }
+
+          .service-image-wrap {
+            aspect-ratio: 1.05;
+          }
+
+          .service-info {
+            grid-template-columns: 1fr auto;
+          }
+
+          .about-image {
+            min-height: 470px;
+          }
+
+          .about-badge {
+            width: 145px;
+          }
+
+          .about-points {
+            grid-template-columns: 1fr 1fr;
+          }
+
+          .gallery-en {
+            margin-top: 12px;
+          }
+
+          .gallery-grid {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 250px 190px 190px;
+          }
+
+          .gallery-item:nth-child(1) {
+            grid-row: span 2;
+          }
+
+          .gallery-item:nth-child(2) {
+            grid-row: span 2;
+          }
+
+          .gallery-item:nth-child(3) {
+            grid-column: 1;
+          }
+
+          .gallery-item:nth-child(4) {
+            grid-column: 2;
+          }
+
+          .contact-title {
+            font-size: clamp(38px, 12vw, 58px);
+          }
+
+          .footer {
+            padding-bottom: 100px;
+          }
+
+          .footer-inner {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+
+          .mobile-cta {
+            display: block;
+          }
+        }
+
+        @media (max-width: 430px) {
+          .brand-en {
+            display: none;
+          }
+
+          .hero {
+            min-height: 690px;
+          }
+
+          .hero-content {
+            padding-top: 140px;
+          }
+
+          .hero-title {
+            font-size: 45px;
+          }
+
+          .section {
+            padding: 75px 0;
+          }
+
+          .gallery-grid {
+            grid-template-columns: 1fr;
+            grid-template-rows: 300px 230px 230px 230px;
+          }
+
+          .gallery-item:nth-child(1),
+          .gallery-item:nth-child(2),
+          .gallery-item:nth-child(3),
+          .gallery-item:nth-child(4) {
+            grid-column: auto;
+            grid-row: auto;
+          }
+
+          .about-points {
+            grid-template-columns: 1fr;
+          }
         }
       `}</style>
+
+      {/* MOBILE MENU */}
+      <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
+        <div className="mobile-menu-top">
+          <div className="brand">
+            <div className="brand-mark">T</div>
+            <div className="brand-copy">
+              <span className="brand-fa">سالن زیبایی طناز</span>
+              <span className="brand-en">TANAZ BEAUTY</span>
+            </div>
+          </div>
+
+          <button
+            className="mobile-close"
+            onClick={closeMenu}
+            aria-label="بستن منو"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <nav className="mobile-links">
+          <a href="#home" onClick={closeMenu}>
+            خانه
+          </a>
+          <a href="#services" onClick={closeMenu}>
+            خدمات
+          </a>
+          <a href="#about" onClick={closeMenu}>
+            درباره ما
+          </a>
+          <a href="#portfolio" onClick={closeMenu}>
+            نمونه کارها
+          </a>
+          <a href="#contact" onClick={closeMenu}>
+            تماس
+          </a>
+        </nav>
+
+        <div className="mobile-menu-en">BEAUTY · STYLE · YOU</div>
+      </div>
+
+      {/* HEADER */}
+      <header className="header">
+        <div className="container header-inner">
+          <a href="#home" className="brand">
+            <div className="brand-mark">T</div>
+
+            <div className="brand-copy">
+              <span className="brand-fa">سالن زیبایی طناز</span>
+              <span className="brand-en">TANAZ BEAUTY</span>
+            </div>
+          </a>
+
+          <nav className="nav">
+            <a href="#home">خانه</a>
+            <a href="#services">خدمات</a>
+            <a href="#about">درباره ما</a>
+            <a href="#portfolio">نمونه کارها</a>
+            <a href="#contact">تماس</a>
+          </nav>
+
+          <a className="header-action" href="#contact">
+            رزرو نوبت
+            <ArrowUpLeft size={14} />
+          </a>
+
+          <button
+            className="menu-button"
+            onClick={() => setMenuOpen(true)}
+            aria-label="باز کردن منو"
+          >
+            <Menu size={19} />
+          </button>
+        </div>
+      </header>
+
+      {/* HERO */}
+      <section className="hero" id="home">
+        <div className="hero-image" />
+
+        <div className="hero-content">
+          <div className="hero-kicker">
+            <span />
+            BEAUTY · STYLE · YOU
+          </div>
+
+          <h1 className="hero-title fa-display">
+            {"زیبایی تو،\nامضای توست."}
+          </h1>
+
+          <p className="hero-title-en">YOUR BEAUTY, YOUR SIGNATURE</p>
+
+          <div className="hero-bottom">
+            <p className="hero-description">
+              جایی برای زیبایی، آرامش و توجه به جزئیاتی که تو را خاص‌تر می‌کنند.
+              در طناز، هر انتخاب با شناخت سبک و شخصیت تو شکل می‌گیرد.
+            </p>
+
+            <a href="#services" className="hero-button">
+              مشاهده خدمات
+              <ArrowLeft size={15} />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* TRUST */}
+      <section className="trust">
+        <div className="container trust-inner">
+          <div className="trust-item">
+            <Sparkles className="trust-icon" size={19} strokeWidth={1.4} />
+
+            <div>
+              <p className="trust-title">تجربه تخصصی</p>
+              <p className="trust-text">تمرکز روی کیفیت و ظرافت</p>
+            </div>
+          </div>
+
+          <div className="trust-item">
+            <Star className="trust-icon" size={19} strokeWidth={1.4} />
+
+            <div>
+              <p className="trust-title">استایل شخصی</p>
+              <p className="trust-text">متناسب با چهره و سلیقه شما</p>
+            </div>
+          </div>
+
+          <div className="trust-item">
+            <CalendarDays
+              className="trust-icon"
+              size={19}
+              strokeWidth={1.4}
+            />
+
+            <div>
+              <p className="trust-title">رزرو با هماهنگی</p>
+              <p className="trust-text">برای تجربه‌ای آرام و منظم</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <section className="section services" id="services">
+        <div className="container">
+          <div className="services-top">
+            <div className="section-heading">
+              <div className="eyebrow">OUR SERVICES</div>
+
+              <h2 className="section-title fa-display">
+                {"هر جزئیات،\nبرای تو طراحی شده است."}
+              </h2>
+            </div>
+
+            <p className="services-note">
+              زیبایی برای ما یک قالب ثابت نیست؛ هر سرویس با توجه به فرم چهره،
+              سبک و خواسته تو شخصی‌سازی می‌شود.
+            </p>
+          </div>
+
+          <div className="service-grid">
+            {services.map((service) => (
+              <article className="service-card" key={service.number}>
+                <div className="service-image-wrap">
+                  <img
+                    className="service-image"
+                    src={service.image}
+                    alt={service.title}
+                    loading="lazy"
+                  />
+
+                  <div className="service-number">{service.number}</div>
+                </div>
+
+                <div className="service-info">
+                  <div>
+                    <h3 className="service-title">{service.title}</h3>
+
+                    <div className="service-en">{service.english}</div>
+
+                    <p className="service-description">
+                      {service.description}
+                    </p>
+                  </div>
+
+                  <div className="service-arrow">
+                    <ArrowUpLeft size={17} strokeWidth={1.4} />
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ABOUT */}
+      <section className="section about" id="about">
+        <div className="container about-grid">
+          <div className="about-image">
+            <img src={images.beauty} alt="سالن زیبایی طناز" loading="lazy" />
+
+            <div className="about-badge">
+              <div className="about-badge-number">T</div>
+              <div className="about-badge-text">
+                TANAZ BEAUTY
+                <br />
+                ISFAHAN
+              </div>
+            </div>
+          </div>
+
+          <div className="about-copy">
+            <div className="eyebrow">ABOUT TANAZ</div>
+
+            <h2 className="about-title fa-display">
+              {"زیبایی، وقتی زیباست\nکه شبیه خودت باشد."}
+            </h2>
+
+            <p className="about-text">
+              سالن زیبایی طناز در سپاهان‌شهر اصفهان، با نگاه به زیبایی طبیعی و
+              استایل شخصی شکل گرفته است. هدف ما این است که نتیجه نهایی فقط
+              زیبا نباشد؛ بلکه با چهره، شخصیت و سبک زندگی تو هماهنگ باشد.
+            </p>
+
+            <div className="about-points">
+              <div className="about-point">
+                <strong>ظرافت</strong>
+                <span>توجه به کوچک‌ترین جزئیات</span>
+              </div>
+
+              <div className="about-point">
+                <strong>تخصص</strong>
+                <span>انتخاب تکنیک متناسب با شما</span>
+              </div>
+
+              <div className="about-point">
+                <strong>آرامش</strong>
+                <span>تجربه‌ای فراتر از یک سرویس زیبایی</span>
+              </div>
+
+              <div className="about-point">
+                <strong>شخصی‌سازی</strong>
+                <span>زیبایی با امضای خودت</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* GALLERY */}
+      <section className="section gallery" id="portfolio">
+        <div className="container">
+          <div className="gallery-heading">
+            <div>
+              <div className="eyebrow">OUR WORK</div>
+
+              <h2 className="gallery-title fa-display">نمونه کارها</h2>
+            </div>
+
+            <div className="gallery-en">A TOUCH OF BEAUTY</div>
+          </div>
+
+          <div className="gallery-grid">
+            <div className="gallery-item">
+              <img src={images.hero} alt="نمونه کار سالن طناز" loading="lazy" />
+            </div>
+
+            <div className="gallery-item">
+              <img
+                src={images.color}
+                alt="نمونه رنگ مو"
+                loading="lazy"
+              />
+            </div>
+
+            <div className="gallery-item">
+              <img
+                src={images.makeup}
+                alt="نمونه میکاپ"
+                loading="lazy"
+              />
+            </div>
+
+            <div className="gallery-item">
+              <img
+                src={images.styling}
+                alt="نمونه استایل مو"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section className="section contact" id="contact">
+        <div className="container contact-grid">
+          <div>
+            <div className="eyebrow">BOOK YOUR MOMENT</div>
+
+            <h2 className="contact-title fa-display">
+              {"وقت آن است که\nبرای خودت وقت بگذاری."}
+            </h2>
+
+            <p className="contact-text">
+              برای دریافت مشاوره، اطلاع از قیمت خدمات و هماهنگی زمان مراجعه،
+              از طریق تماس یا پیام با ما در ارتباط باشید.
+            </p>
+
+            <div className="contact-actions">
+              <a
+                className="contact-button primary"
+                href="tel:03136518167"
+              >
+                <Phone size={15} />
+                تماس با سالن
+              </a>
+
+              <a
+                className="contact-button"
+                href="https://t.me/Tanazbeautybot"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <MessageCircle size={15} />
+                تلگرام
+              </a>
+
+              <a
+                className="contact-button"
+                href="https://www.instagram.com/tanazz.beauty/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Instagram size={15} />
+                اینستاگرام
+              </a>
+            </div>
+          </div>
+
+          <div className="contact-list">
+            <div className="contact-row">
+              <span className="contact-label">PHONE</span>
+              <a className="contact-value" href="tel:03136518167">
+                031 3651 8167
+              </a>
+            </div>
+
+            <div className="contact-row">
+              <span className="contact-label">MOBILE</span>
+              <a className="contact-value" href="tel:09307984291">
+                0930 792 8491
+              </a>
+            </div>
+
+            <div className="contact-row">
+              <span className="contact-label">ADDRESS</span>
+              <span className="contact-value rtl">
+                سپاهان‌شهر، بلوار غدیر، مجتمع عقیق ۵
+              </span>
+            </div>
+
+            <div className="contact-row">
+              <span className="contact-label">INSTAGRAM</span>
+              <a
+                className="contact-value"
+                href="https://www.instagram.com/tanazz.beauty/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                @tanazz.beauty
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="footer">
+        <div className="container footer-inner">
+          <div className="footer-copy">
+            © 2026 Tanaz Beauty · All rights reserved.
+          </div>
+
+          <div className="footer-social">
+            <a
+              href="https://www.instagram.com/tanazz.beauty/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+            >
+              <Instagram size={15} />
+            </a>
+
+            <a
+              href="https://t.me/Tanazbeautybot"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Telegram"
+            >
+              <MessageCircle size={15} />
+            </a>
+
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=%D8%B3%D9%BE%D8%A7%D9%87%D8%A7%D9%86%D8%B4%D9%87%D8%B1%20%D8%A8%D9%84%D9%88%D8%A7%D8%B1%20%D8%BA%D8%AF%DB%8C%D8%B1%20%D9%85%D8%AC%D8%AA%D9%85%D8%B9%20%D8%B9%D9%82%DB%8C%D9%82%205"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Google Maps"
+            >
+              <MapPin size={15} />
+            </a>
+          </div>
+        </div>
+      </footer>
+
+      {/* MOBILE CTA */}
+      <div className="mobile-cta">
+        <a href="#contact">
+          <CalendarDays size={16} />
+          رزرو نوبت
+        </a>
+      </div>
 
       <script
         type="application/ld+json"
@@ -412,563 +1591,6 @@ export default function Home() {
           __html: JSON.stringify(localBusinessSchema),
         }}
       />
-
-      {/* =========================================================
-          HEADER
-      ========================================================= */}
-
-      <header className="fixed inset-x-0 top-0 z-50">
-        <div className="mx-auto mt-4 max-w-6xl px-4 sm:px-6">
-          <div className="flex h-[62px] items-center justify-between rounded-full border border-white/70 bg-white/90 px-4 shadow-[0_12px_45px_rgba(50,35,25,0.07)] backdrop-blur-xl sm:px-6">
-            <button
-              onClick={() => scrollTo("home")}
-              className="flex items-center gap-3"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#302a26] text-white">
-                <Sparkles size={15} strokeWidth={1.5} />
-              </span>
-
-              <span className="latin-display text-[21px] font-semibold tracking-wide">
-                Tanaz Beauty
-              </span>
-            </button>
-
-            <nav className="hidden items-center gap-8 md:flex">
-              {t.nav.map((item, index) => (
-                <button
-                  key={item}
-                  onClick={() => scrollTo(navIds[index])}
-                  className="text-[12px] font-medium text-[#706760] transition hover:text-[#302a26]"
-                >
-                  {item}
-                </button>
-              ))}
-            </nav>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setIsFa(!isFa)}
-                className="hidden rounded-full border border-[#e6ded7] px-4 py-2 text-[10px] font-semibold tracking-[0.15em] text-[#665c55] transition hover:bg-[#f4eee9] sm:block"
-              >
-                {t.language}
-              </button>
-
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-[#302a26] text-white md:hidden"
-              >
-                {menuOpen ? <X size={16} /> : <Menu size={16} />}
-              </button>
-            </div>
-          </div>
-
-          {menuOpen && (
-            <div className="mt-2 rounded-[22px] border border-[#e9e1da] bg-white p-2 shadow-xl md:hidden">
-              {t.nav.map((item, index) => (
-                <button
-                  key={item}
-                  onClick={() => scrollTo(navIds[index])}
-                  className="block w-full rounded-xl px-4 py-3 text-right text-[13px] text-[#554c46] hover:bg-[#f7f2ed]"
-                >
-                  {item}
-                </button>
-              ))}
-
-              <button
-                onClick={() => setIsFa(!isFa)}
-                className="mt-1 w-full rounded-xl bg-[#302a26] px-4 py-3 text-[12px] font-semibold text-white"
-              >
-                {t.language}
-              </button>
-            </div>
-          )}
-        </div>
-      </header>
-
-      {/* =========================================================
-          HERO
-      ========================================================= */}
-
-      <section
-        id="home"
-        className="relative min-h-[760px] overflow-hidden"
-      >
-        <img
-          src={images.hero}
-          alt="Tanaz Beauty Salon"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-
-        <div className="absolute inset-0 bg-[#18120f]/20" />
-
-        <div className="absolute inset-0 bg-gradient-to-t from-[#17120f] via-[#17120f]/35 to-transparent" />
-
-        <div className="relative z-10 mx-auto flex min-h-[760px] max-w-6xl items-end px-6 pb-20 pt-36 sm:px-8 lg:pb-24">
-          <div className="max-w-[720px] text-white">
-            <div className="mb-7 flex items-center gap-3">
-              <span className="h-px w-10 bg-white/45" />
-
-              <span className="text-[10px] font-medium tracking-[0.2em] text-white/70">
-                {t.badge}
-              </span>
-            </div>
-
-            <p className="mb-5 text-[11px] font-medium tracking-[0.1em] text-white/60">
-              {t.heroEyebrow}
-            </p>
-
-            <h1 className="display whitespace-pre-line text-[clamp(3.1rem,7vw,6.4rem)] font-medium leading-[1.18] tracking-[-0.045em]">
-              {t.heroTitle}
-            </h1>
-
-            <p className="mt-7 max-w-[590px] text-[13px] leading-[2.1] text-white/70 sm:text-[14px]">
-              {t.heroText}
-            </p>
-
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <button
-                onClick={() => scrollTo("contact")}
-                className="group flex items-center justify-center gap-3 rounded-full bg-white px-7 py-3.5 text-[12px] font-semibold text-[#302a26] transition hover:-translate-y-0.5 hover:bg-[#f2ebe5]"
-              >
-                {t.primary}
-
-                <ArrowUpLeft
-                  size={16}
-                  className="transition group-hover:-translate-x-1 group-hover:-translate-y-1"
-                />
-              </button>
-
-              <button
-                onClick={() => scrollTo("services")}
-                className="rounded-full border border-white/25 bg-white/10 px-7 py-3.5 text-[12px] font-semibold text-white backdrop-blur-md transition hover:bg-white/15"
-              >
-                {t.secondary}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 md:block">
-          <div className="flex flex-col items-center gap-2 text-[8px] tracking-[0.3em] text-white/45">
-            <span>SCROLL</span>
-            <span className="h-9 w-px bg-white/25" />
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================
-          TRUST
-      ========================================================= */}
-
-      <section className="relative z-10 -mt-5 px-4">
-        <div className="mx-auto grid max-w-5xl overflow-hidden rounded-[20px] border border-[#e8dfd7] bg-white shadow-[0_20px_60px_rgba(55,40,30,0.08)] sm:grid-cols-3">
-          {t.trust.map((item, index) => (
-            <div
-              key={item}
-              className={`flex items-center justify-center gap-3 px-5 py-5 text-[11px] font-medium text-[#5d544d] ${
-                index < 2
-                  ? "border-b border-[#eee8e2] sm:border-b-0 sm:border-l"
-                  : ""
-              }`}
-            >
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f4eee8] text-[#8a7160]">
-                {index === 0 && <Sparkles size={14} />}
-                {index === 1 && <Heart size={14} />}
-                {index === 2 && <Gem size={14} />}
-              </span>
-
-              {item}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* =========================================================
-          SERVICES
-      ========================================================= */}
-
-      <section
-        id="services"
-        className="scroll-mt-24 px-6 py-28 sm:px-8 lg:py-36"
-      >
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-            <div>
-              <p className="mb-4 text-[10px] font-bold tracking-[0.25em] text-[#9a806e]">
-                {t.servicesEyebrow}
-              </p>
-
-              <h2 className="display whitespace-pre-line text-[clamp(2.2rem,4vw,3.8rem)] font-medium leading-[1.35] tracking-[-0.03em] text-[#302a26]">
-                {t.servicesTitle}
-              </h2>
-            </div>
-
-            <p className="max-w-xl text-[13px] leading-[2.1] text-[#746a63] lg:pb-2">
-              {t.servicesText}
-            </p>
-          </div>
-
-          <div className="mt-16 grid gap-5 md:grid-cols-2">
-            {t.services.map((service, index) => {
-              const Icon = service.icon;
-
-              return (
-                <article
-                  key={service.title}
-                  className={`group relative overflow-hidden rounded-[28px] bg-white ${
-                    index === 0 || index === 3
-                      ? "md:min-h-[500px]"
-                      : "md:min-h-[430px]"
-                  }`}
-                >
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.035]"
-                  />
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#17120f]/85 via-[#17120f]/15 to-transparent" />
-
-                  <div className="relative flex h-full min-h-[430px] flex-col justify-between p-6 text-white md:min-h-0 md:p-8">
-                    <div className="flex items-start justify-between">
-                      <span className="text-[10px] tracking-[0.2em] text-white/55">
-                        {service.number}
-                      </span>
-
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md">
-                        <Icon size={17} strokeWidth={1.5} />
-                      </span>
-                    </div>
-
-                    <div>
-                      <p className="mb-2 text-[9px] uppercase tracking-[0.25em] text-white/55">
-                        {service.short}
-                      </p>
-
-                      <h3 className="display text-[28px] font-medium leading-tight">
-                        {service.title}
-                      </h3>
-
-                      <p className="mt-3 max-w-md text-[12px] leading-[2] text-white/70">
-                        {service.text}
-                      </p>
-
-                      <button
-                        onClick={() => scrollTo("contact")}
-                        className="mt-5 flex items-center gap-2 text-[10px] font-semibold text-white"
-                      >
-                        {t.primary}
-                        <ChevronLeft size={14} />
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================
-          BRAND / ABOUT
-      ========================================================= */}
-
-      <section
-        id="about"
-        className="scroll-mt-24 bg-[#eee7e0] px-6 py-28 sm:px-8 lg:py-36"
-      >
-        <div className="mx-auto max-w-6xl">
-          <div className="grid items-center gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
-            <div className="relative">
-              <div className="absolute -bottom-6 -left-6 hidden h-full w-full rounded-[32px] border border-[#d1c1b5] lg:block" />
-
-              <div className="relative overflow-hidden rounded-[32px]">
-                <img
-                  src={images.beauty}
-                  alt="Tanaz Beauty"
-                  className="h-[520px] w-full object-cover"
-                />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" />
-
-                <div className="absolute bottom-6 left-6 text-white">
-                  <div className="flex items-center gap-2 text-[10px] tracking-[0.15em]">
-                    <Star size={13} fill="currentColor" />
-                    TANAZ BEAUTY
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <p className="mb-5 text-[10px] font-bold tracking-[0.25em] text-[#9a806e]">
-                {t.aboutEyebrow}
-              </p>
-
-              <h2 className="display whitespace-pre-line text-[clamp(2.3rem,4.5vw,4.1rem)] font-medium leading-[1.3] tracking-[-0.035em] text-[#302a26]">
-                {t.aboutTitle}
-              </h2>
-
-              <div className="mt-8 max-w-xl space-y-5 text-[13px] leading-[2.15] text-[#675d56] sm:text-[14px]">
-                <p>{t.aboutText}</p>
-                <p>{t.aboutText2}</p>
-              </div>
-
-              <button
-                onClick={() => scrollTo("contact")}
-                className="mt-9 flex items-center gap-3 rounded-full bg-[#302a26] px-6 py-3.5 text-[11px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#453b34]"
-              >
-                {t.aboutButton}
-                <ArrowUpLeft size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================
-          EDITORIAL PORTFOLIO
-      ========================================================= */}
-
-      <section
-        id="gallery"
-        className="scroll-mt-24 px-6 py-28 sm:px-8 lg:py-36"
-      >
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-8 lg:grid-cols-[1fr_0.7fr] lg:items-end">
-            <div>
-              <p className="mb-4 text-[10px] font-bold tracking-[0.25em] text-[#9a806e]">
-                {t.galleryEyebrow}
-              </p>
-
-              <h2 className="display text-[clamp(2.3rem,4vw,3.8rem)] font-medium leading-[1.3] tracking-[-0.03em] text-[#302a26]">
-                {t.galleryTitle}
-              </h2>
-            </div>
-
-            <p className="max-w-md text-[13px] leading-[2.1] text-[#746a63]">
-              {t.galleryText}
-            </p>
-          </div>
-
-          <div className="mt-14 grid grid-cols-12 gap-3 sm:gap-4">
-            {/* Large */}
-            <div className="group relative col-span-12 h-[460px] overflow-hidden rounded-[28px] sm:col-span-7 sm:h-[620px]">
-              <img
-                src={images.hero}
-                alt="Tanaz Beauty Salon"
-                className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-
-              <div className="absolute bottom-7 right-7 text-white">
-                <p className="text-[8px] tracking-[0.3em] text-white/60">
-                  TANAZ BEAUTY
-                </p>
-
-                <p className="latin-display mt-1 text-[32px]">
-                  Beauty & Care
-                </p>
-              </div>
-            </div>
-
-            {/* Right top */}
-            <div className="group col-span-6 h-[300px] overflow-hidden rounded-[28px] sm:col-span-5 sm:h-[300px]">
-              <img
-                src={images.color}
-                alt="Hair color"
-                className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.05]"
-              />
-            </div>
-
-            {/* Right bottom */}
-            <div className="group col-span-6 h-[300px] overflow-hidden rounded-[28px] sm:col-span-5 sm:h-[300px]">
-              <img
-                src={images.makeup}
-                alt="Makeup"
-                className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.05]"
-              />
-            </div>
-
-            {/* Wide bottom */}
-            <div className="group col-span-12 h-[260px] overflow-hidden rounded-[28px] sm:h-[330px]">
-              <img
-                src={images.styling}
-                alt="Hair styling"
-                className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================
-          CONTACT
-      ========================================================= */}
-
-      <section
-        id="contact"
-        className="scroll-mt-24 bg-[#302a26] px-6 py-28 text-white sm:px-8 lg:py-36"
-      >
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-16 lg:grid-cols-[1fr_0.85fr] lg:gap-24">
-            <div>
-              <p className="mb-5 text-[10px] font-bold tracking-[0.25em] text-[#c8aa94]">
-                {t.bookingEyebrow}
-              </p>
-
-              <h2 className="display whitespace-pre-line text-[clamp(2.5rem,5vw,4.8rem)] font-medium leading-[1.25] tracking-[-0.035em]">
-                {t.bookingTitle}
-              </h2>
-
-              <p className="mt-7 max-w-xl text-[13px] leading-[2.1] text-white/60 sm:text-[14px]">
-                {t.bookingText}
-              </p>
-
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href="https://t.me/Tanazbeautybot"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-3 rounded-full bg-white px-6 py-3.5 text-[11px] font-semibold text-[#302a26] transition hover:bg-[#f1e8e1]"
-                >
-                  <Send size={15} />
-                  {t.telegram}
-                </a>
-
-                <a
-                  href="tel:+983136518167"
-                  className="flex items-center justify-center gap-3 rounded-full border border-white/15 px-6 py-3.5 text-[11px] font-semibold text-white transition hover:bg-white/10"
-                >
-                  <Phone size={15} />
-                  {t.call}
-                </a>
-              </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-              <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.035] p-6">
-                <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08]">
-                  <MapPin size={16} />
-                </div>
-
-                <p className="mb-2 text-[9px] text-white/35">
-                  {t.addressTitle}
-                </p>
-
-                <p className="text-[12px] leading-[2] text-white/70">
-                  {t.address}
-                </p>
-
-                <a
-                  href="https://www.google.com/maps/search/?api=1&query=سپاهانشهر+بلوار+غدیر+مجتمع+عقیق+5+پلاک+22"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-4 inline-flex items-center gap-2 text-[10px] font-semibold text-[#d5b9a3]"
-                >
-                  مشاهده روی نقشه
-                  <ArrowUpLeft size={13} />
-                </a>
-              </div>
-
-              <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.035] p-6">
-                <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08]">
-                  <Phone size={16} />
-                </div>
-
-                <p className="mb-2 text-[9px] text-white/35">
-                  {t.phoneTitle}
-                </p>
-
-                <a
-                  href="tel:+983136518167"
-                  className="block text-[12px] text-white/75"
-                >
-                  03136518167
-                </a>
-
-                <a
-                  href="tel:+989307984291"
-                  className="mt-2 block text-[12px] text-white/55"
-                >
-                  09307984291
-                </a>
-              </div>
-
-              <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.035] p-6">
-                <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08]">
-                  <Instagram size={16} />
-                </div>
-
-                <p className="mb-2 text-[9px] text-white/35">
-                  {t.instagramTitle}
-                </p>
-
-                <a
-                  href="https://www.instagram.com/tanazz.beauty/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-[12px] text-white/75"
-                >
-                  @tanazz.beauty
-                </a>
-              </div>
-
-              <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.035] p-6">
-                <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08]">
-                  <Clock size={16} />
-                </div>
-
-                <p className="mb-2 text-[9px] text-white/35">
-                  {t.hoursTitle}
-                </p>
-
-                <p className="text-[12px] text-white/70">
-                  {t.hours}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================
-          FOOTER
-      ========================================================= */}
-
-      <footer className="bg-[#241f1c] px-6 py-7 text-white/40 sm:px-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-[10px] sm:flex-row">
-          <p>{t.footer}</p>
-
-          <div className="flex items-center gap-5">
-            <button
-              onClick={() => scrollTo("home")}
-              className="transition hover:text-white"
-            >
-              {isFa ? "بازگشت به بالا" : "Back to top"}
-            </button>
-
-            <span className="h-1 w-1 rounded-full bg-white/20" />
-
-            <span>© {new Date().getFullYear()}</span>
-          </div>
-        </div>
-      </footer>
-
-      {/* =========================================================
-          MOBILE CTA
-      ========================================================= */}
-
-      <div className="fixed inset-x-4 bottom-4 z-40 md:hidden">
-        <button
-          onClick={() => scrollTo("contact")}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#302a26] px-6 py-3.5 text-[11px] font-bold text-white shadow-[0_15px_40px_rgba(30,20,15,0.25)]"
-        >
-          <Send size={14} />
-          {t.primary}
-        </button>
-      </div>
     </main>
   );
 }
