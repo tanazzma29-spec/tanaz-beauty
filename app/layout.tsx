@@ -1,43 +1,76 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+
+import "@fontsource/vazirmatn/300.css";
 import "@fontsource/vazirmatn/400.css";
 import "@fontsource/vazirmatn/500.css";
-import "@fontsource/vazirmatn/600.css";
-import "@fontsource/vazirmatn/700.css";
 import "./globals.css";
 
-const display = Cormorant_Garamond({
-  subsets: ["latin"],
-  variable: "--font-cormorant",
-  weight: ["400", "500", "600", "700"],
-});
-
-const sans = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  weight: ["400", "500", "600", "700"],
-});
-
 export const metadata: Metadata = {
-  title: "سالن زیبایی طناز | Tanaz Beauty",
+  title: {
+    default: "طناز | سالن زیبایی در سپاهان‌شهر",
+    template: "%s | طناز",
+  },
   description:
-    "سالن زیبایی طناز در سپاهانشهر؛ خدمات تخصصی رنگ و احیای مو، کوتاهی، میکاپ، شینیون، ابرو، مژه و ناخن.",
-  verification: {
-    google: "9ZeSLDSsOVYJpkCtSMbZ_mZk5sTV9ohScV-R9cIu4QI",
+    "سالن زیبایی طناز در سپاهان‌شهر؛ خدمات تخصصی مو، صورت، ناخن، مژه و مراقبت پا.",
+  keywords: [
+    "سالن زیبایی طناز",
+    "سالن زیبایی سپاهان شهر",
+    "آرایشگاه زنانه سپاهان شهر",
+    "کاشت ناخن",
+    "مژه",
+    "رنگ مو",
+    "مراقبت پوست",
+    "طناز بیوتی",
+  ],
+  authors: [{ name: "Tanaz Beauty Salon" }],
+  creator: "Tanaz Beauty Salon",
+  publisher: "Tanaz Beauty Salon",
+  openGraph: {
+    title: "طناز | سالن زیبایی در سپاهان‌شهر",
+    description:
+      "سالن زیبایی طناز؛ تجربه‌ای متفاوت از زیبایی، ظرافت و مراقبت حرفه‌ای.",
+    locale: "fa_IR",
+    type: "website",
+    siteName: "Tanaz Beauty Salon",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "BeautySalon",
+  name: "سالن زیبایی طناز",
+  description:
+    "سالن زیبایی طناز در سپاهان‌شهر با ارائه خدمات تخصصی مو، صورت، ناخن، مژه و مراقبت پا.",
+  telephone: "+983136518167",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "سپاهان‌شهر",
+    addressCountry: "IR",
+  },
+  sameAs: ["https://www.instagram.com/tanazz.beauty/"],
+};
+
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html
-      lang="fa"
-      dir="rtl"
-      className={`${display.variable} ${sans.variable}`}
-    >
-      <body>{children}</body>
+    <html lang="fa" dir="rtl">
+      <body>
+        {children}
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData),
+          }}
+        />
+      </body>
     </html>
   );
 }
