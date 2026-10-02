@@ -1,74 +1,581 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowUpLeft, ChevronDown, Instagram, MapPin, Menu, MessageCircle, Phone, X } from "lucide-react";
-import { Cormorant_Garamond, Vazirmatn } from "next/font/google";
+import Link from "next/link";
+import {
+  ArrowUpLeft,
+  ChevronDown,
+  Instagram,
+  MapPin,
+  Menu,
+  MessageCircle,
+  Phone,
+  X,
+} from "lucide-react";
 
-const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-cormorant", display: "swap" });
-const vazirmatn = Vazirmatn({ subsets: ["arabic"], weight: ["300", "400", "500", "600"], variable: "--font-vazirmatn", display: "swap" });
+const BOOKING_URL = "https://t.me/Tanazbeautybot";
 
-const bookingBotUrl = "https://t.me/Tanazbeautybot";
+const CONTACT = {
+  phone: "03136518167",
+  mobile: "09307984291",
+  instagram: "https://www.instagram.com/tanazz.beauty/",
+  map: "https://www.google.com/maps/search/?api=1&query=سپاهان‌شهر%20بلوار%20غدیر%20مجتمع%20عقیق%205%20پلاک%2022",
+};
 
-const categories = [
-  ["face", "01", "صورت", "FACE", ["اصلاح کل (ابرو + صورت)", "اصلاح ابرو", "اصلاح صورت", "وکس صورت و ابرو", "وکس صورت", "لیفت ابرو", "پاکسازی صورت", "ماساژ صورت", "میکاپ"]],
-  ["hair", "02", "مو", "HAIR", ["کوتاهی", "چتری مو", "براشینگ", "شینیون", "رنگ و لایت", "کراتین و احیا", "موخوره‌گیری"]],
-  ["nail", "03", "ناخن", "NAILS", ["کاشت", "ژلیش", "لمینت", "مانیکور", "ترمیم", "ریمو"]],
-  ["lash", "04", "مژه", "LASHES", ["کاشت مژه", "اکستنشن مژه", "لیفت مژه", "ترمیم کاشت مژه", "ترمیم اکستنشن مژه", "ریمو مژه"]],
-  ["foot", "05", "پا", "FOOT CARE", ["کف‌سابی", "پدیکور", "کف‌سابی + پدیکور", "ژلیش پا"]],
-] as const;
-
-const gallery = [
-  ["https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1500&q=90", "رنگ و لایت"],
-  ["https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=1000&q=90", "میکاپ"],
-  ["https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1000&q=90", "استایل مو"],
-  ["https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1600&q=90", "فضای سالن"],
+const services = [
+  {
+    id: "hair",
+    number: "01",
+    title: "مو",
+    english: "HAIR",
+    description: "کوتاهی، استایل، رنگ و احیای مو",
+    items: [
+      "کوتاهی",
+      "چتری مو",
+      "براشینگ",
+      "شینیون",
+      "رنگ و لایت",
+      "کراتین و احیا",
+      "موخوره‌گیری",
+    ],
+  },
+  {
+    id: "face",
+    number: "02",
+    title: "صورت",
+    english: "FACE",
+    description: "مراقبت، اصلاح و زیبایی چهره",
+    items: [
+      "اصلاح کل",
+      "اصلاح ابرو",
+      "اصلاح صورت",
+      "وکس صورت و ابرو",
+      "وکس صورت",
+      "لیفت ابرو",
+      "پاکسازی صورت",
+      "ماساژ صورت",
+      "میکاپ",
+    ],
+  },
+  {
+    id: "nail",
+    number: "03",
+    title: "ناخن",
+    english: "NAILS",
+    description: "جزئیات ظریف برای دست‌هایی متفاوت",
+    items: ["کاشت", "ژلیش", "لمینت", "مانیکور", "ترمیم", "ریمو"],
+  },
+  {
+    id: "lash",
+    number: "04",
+    title: "مژه",
+    english: "LASHES",
+    description: "تأکید ظریف بر نگاه شما",
+    items: [
+      "کاشت مژه",
+      "اکستنشن مژه",
+      "لیفت مژه",
+      "ترمیم کاشت مژه",
+      "ترمیم اکستنشن مژه",
+      "ریمو مژه",
+    ],
+  },
+  {
+    id: "foot",
+    number: "05",
+    title: "پا",
+    english: "FOOT CARE",
+    description: "مراقبت و زیبایی کامل پا",
+    items: ["کف‌سابی", "پدیکور", "کف‌سابی + پدیکور", "ژلیش پا"],
+  },
 ];
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [openCategory, setOpenCategory] = useState<string | null>("hair");
-  const closeMenu = () => setMenuOpen(false);
+  const [openService, setOpenService] = useState<string | null>(null);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    const onKeyDown = (event: KeyboardEvent) => event.key === "Escape" && closeMenu();
-    window.addEventListener("keydown", onKeyDown);
-    return () => { document.body.style.overflow = ""; window.removeEventListener("keydown", onKeyDown); };
+    document.body.classList.toggle("menu-is-open", menuOpen);
+
+    return () => {
+      document.body.classList.remove("menu-is-open");
+    };
   }, [menuOpen]);
 
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+
+    window.addEventListener("keydown", handleKey);
+
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
-    <main className={`${vazirmatn.variable} ${cormorant.variable} site`}>
-      <header className="header">
-        <div className="header-inner">
-          <a href="#top" className="brand" onClick={closeMenu} aria-label="سالن زیبایی طناز، صفحه اصلی"><span className="brand-symbol">T</span><span><b>طناز</b><small>BEAUTY SALON</small></span></a>
-          <nav className="desktop-nav" aria-label="منوی اصلی"><a href="#story">طناز</a><a href="#services">خدمات</a><a href="#gallery">گالری</a><a href="#contact">تماس</a></nav>
-          <a className="book-header" href={bookingBotUrl} target="_blank" rel="noreferrer">مشاوره و رزرو <ArrowUpLeft size={16}/></a>
-          <button className="menu-button" type="button" aria-expanded={menuOpen} aria-label={menuOpen ? "بستن منو" : "بازکردن منو"} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X/> : <Menu/>}</button>
-        </div>
-        <div className={`mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
-          <a href="#story" onClick={closeMenu}>طناز</a><a href="#services" onClick={closeMenu}>خدمات</a><a href="#gallery" onClick={closeMenu}>گالری</a><a href="#contact" onClick={closeMenu}>تماس</a>
-          <a href={bookingBotUrl} target="_blank" rel="noreferrer" onClick={closeMenu} className="mobile-book">مشاوره و رزرو <ArrowUpLeft size={17}/></a>
+    <main>
+      {/* HEADER */}
+      <header className="site-header">
+        <div className="shell header-inner">
+          <Link href="#home" className="brand" onClick={closeMenu}>
+            <span>طناز</span>
+            <small>BEAUTY SALON · ISFAHAN</small>
+          </Link>
+
+          <nav className="desktop-nav" aria-label="ناوبری اصلی">
+            <Link href="#services">خدمات</Link>
+            <Link href="/gallery">نمونه‌کارها</Link>
+            <Link href="#contact">تماس</Link>
+          </nav>
+
+          <a
+            className="header-book"
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>رزرو نوبت</span>
+            <ArrowUpLeft size={17} />
+          </a>
+
+          <button
+            className="menu-button"
+            onClick={() => setMenuOpen((value) => !value)}
+            aria-label={menuOpen ? "بستن منو" : "باز کردن منو"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+          >
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
       </header>
 
-      <section className="hero" id="top">
-        <div className="hero-copy"><p className="eyebrow">ISFAHAN · SEPAHAN SHAHR</p><h1>زیبایی،<br/><em>به شیوهٔ خودت.</em></h1><p className="hero-text">سالن زیبایی طناز؛ جایی برای انتخاب‌هایی دقیق، طبیعی و هماهنگ با سبک تو.</p><a className="hero-link" href="#story">داستان طناز <span>↓</span></a><span className="hero-year">EST. 2024</span></div>
-        <div className="hero-image"><img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1800&q=90" alt="فضای سالن زیبایی طناز"/><div className="hero-image-note">TANAZ<br/>BEAUTY SALON</div></div>
+      {/* MOBILE NAV */}
+      <nav
+        id="mobile-navigation"
+        className={`mobile-navigation ${menuOpen ? "open" : ""}`}
+        aria-hidden={!menuOpen}
+      >
+        <div className="mobile-nav-inner">
+          <Link href="#services" onClick={closeMenu}>
+            خدمات
+          </Link>
+          <Link href="/gallery" onClick={closeMenu}>
+            نمونه‌کارها
+          </Link>
+          <Link href="#contact" onClick={closeMenu}>
+            تماس
+          </Link>
+
+          <a
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={closeMenu}
+            className="mobile-nav-book"
+          >
+            رزرو نوبت
+            <ArrowUpLeft size={17} />
+          </a>
+        </div>
+      </nav>
+
+      {menuOpen && (
+        <button
+          className="menu-backdrop"
+          aria-label="بستن منو"
+          onClick={closeMenu}
+        />
+      )}
+
+      {/* HERO */}
+      <section id="home" className="luxury-hero">
+        <div className="hero-orbit hero-orbit-one" />
+        <div className="hero-orbit hero-orbit-two" />
+
+        <div className="shell hero-content">
+          <div className="hero-topline">
+            <span>SEPAHAN SHAHR</span>
+            <span>ISFAHAN · IRAN</span>
+          </div>
+
+          <div className="hero-main">
+            <div className="hero-kicker">A PRIVATE BEAUTY EXPERIENCE</div>
+
+            <h1>
+              <span>طناز</span>
+              <strong>TANAZ</strong>
+            </h1>
+
+            <div className="hero-line">
+              <span />
+              <p>زیبایی، با انتخابی شخصی.</p>
+            </div>
+          </div>
+
+          <div className="hero-bottom">
+            <div className="hero-index">
+              <span>EST.</span>
+              <strong>2026</strong>
+            </div>
+
+            <a
+              href={BOOKING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hero-cta"
+            >
+              <span>شروع یک تجربه</span>
+              <ArrowUpLeft size={20} />
+            </a>
+          </div>
+        </div>
+
+        <div className="hero-vertical">BEAUTY · DETAIL · PERSONAL</div>
       </section>
 
-      <section className="manifesto" id="story"><div className="manifesto-number">01</div><div><p className="eyebrow dark">OUR POINT OF VIEW</p><h2>زیبایی، وقتی زیباست<br/><em>که شبیه خودت باشی.</em></h2></div><p className="manifesto-text">در طناز، ترندها را با فرم چهره، سلیقه و سبک زندگی تو هماهنگ می‌کنیم؛ تا نتیجه، نسخه‌ای بهتر از خودت باشد، نه شبیه کسی دیگر.</p></section>
+      {/* BRAND INTRO */}
+      <section className="brand-story">
+        <div className="shell story-grid">
+          <div className="story-label">
+            <span>01</span>
+            <p>THE TANAZ APPROACH</p>
+          </div>
 
-      <section className="services" id="services"><div className="section-top"><div><p className="eyebrow dark">02 / SERVICES</p><h2>هر جزئیات،<br/><em>با فکر انتخاب می‌شود.</em></h2></div><p>فهرست خدمات تخصصی طناز را ببینید. برای انتخاب خدمت و هماهنگی نوبت، از ربات رزرو تلگرام استفاده کنید.</p></div><div className="service-list">{categories.map(([id, number, title, english, items]) => { const open = openCategory === id; return <article className={`service-row ${open ? "active" : ""}`} key={id}><button type="button" onClick={() => setOpenCategory(open ? null : id)} aria-expanded={open} aria-controls={`panel-${id}`}><span className="service-num">{number}</span><span className="service-name">{title}<small>{english}</small></span><ChevronDown className="chevron" size={24}/></button><div className="service-panel" id={`panel-${id}`} hidden={!open}><div className="service-panel-inner">{items.map(item => <span key={item}>{item}</span>)}</div></div></article>; })}</div></section>
+          <div className="story-copy">
+            <p className="eyebrow">زیبایی، یک انتخاب شخصی است</p>
 
-      <section className="gallery" id="gallery"><div className="gallery-intro"><p className="eyebrow dark">03 / SELECTED MOMENTS</p><h2>زیبایی،<br/><em>در جزئیات است.</em></h2><p>نمونه‌کارها و لحظه‌هایی از فضای طناز.</p></div><div className="gallery-grid">{gallery.map(([src, alt], index) => <figure className={`photo photo-${index + 1}`} key={src}><img src={src} alt={alt} loading="lazy"/><figcaption>{alt}</figcaption></figure>)}</div></section>
+            <h2>
+              برای زیبایی
+              <br />
+              <em>شما</em>، نه برای همه.
+            </h2>
 
-      <section className="contact" id="contact"><div className="contact-left"><p className="eyebrow light">04 / APPOINTMENT</p><h2>برای خودت،<br/><em>وقت بگذار.</em></h2><p>برای انتخاب خدمت، دیدن زمان‌های آزاد و ثبت نوبت، وارد ربات رزرو تلگرام طناز شوید.</p><a className="booking-button" href={bookingBotUrl} target="_blank" rel="noreferrer">ورود به ربات رزرو <ArrowUpLeft size={20}/></a></div><div className="contact-right"><a href="tel:03136518167"><Phone size={18}/><span><small>PHONE</small><strong dir="ltr">031 365 18167</strong></span><ArrowUpLeft size={17}/></a><a href="tel:09307984291"><MessageCircle size={18}/><span><small>MOBILE</small><strong dir="ltr">0930 798 4291</strong></span><ArrowUpLeft size={17}/></a><a href="https://www.instagram.com/tanazz.beauty/" target="_blank" rel="noreferrer"><Instagram size={18}/><span><small>INSTAGRAM</small><strong dir="ltr">@tanazz.beauty</strong></span><ArrowUpLeft size={17}/></a><a href="https://www.google.com/maps/search/?api=1&query=سپاهانشهر%20بلوار%20غدیر%20مجتمع%20عقیق%205%20پلاک%2022" target="_blank" rel="noreferrer" className="address"><MapPin size={18}/><span><small>ADDRESS</small><strong>سپاهان‌شهر، بلوار غدیر، مجتمع عقیق ۵، طبقه زیرین، پلاک ۲۲</strong></span><ArrowUpLeft size={17}/></a></div></section>
+            <p className="story-description">
+              در طناز، هر خدمت با توجه به فرم چهره، سبک زندگی و سلیقه‌ی شما
+              انتخاب می‌شود. هدف، ساختن ظاهری نیست که فقط زیبا باشد؛
+              هدف، خلق جزئیاتی است که به خود شما تعلق داشته باشد.
+            </p>
 
-      <footer><a href="#top" className="footer-brand"><span>T</span> طناز <small>BEAUTY SALON · ISFAHAN</small></a><span>© {new Date().getFullYear()} TANAZ BEAUTY SALON</span><a href="#top">بازگشت به بالا ↑</a></footer>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify({"@context":"https://schema.org","@type":"BeautySalon",name:"سالن زیبایی طناز",url:"https://tanazzbeauty.ir/",telephone:"+983136518167",sameAs:["https://www.instagram.com/tanazz.beauty/","https://t.me/Tanazbeautybot"]})}} />
-      <style jsx global>{`
-:root{--paper:#f4f0e9;--ink:#25211e;--soft:#82776e;--line:rgba(37,33,30,.18);--tan:#b79d83;--dark:#211d1a;--white:#fffdfa}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-vazirmatn),sans-serif}a{color:inherit;text-decoration:none}.site{overflow:hidden}.header{position:absolute;z-index:20;top:0;left:0;width:100%;color:var(--white)}.header-inner{height:94px;width:min(1380px,calc(100% - 64px));margin:auto;display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,.25)}.brand{display:flex;align-items:center;gap:11px}.brand-symbol{width:39px;height:39px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.65);border-radius:50%;font:500 22px var(--font-cormorant)}.brand b{display:block;font-size:15px;font-weight:500}.brand small,.eyebrow{display:block;font:11px var(--font-cormorant);letter-spacing:.18em}.brand small{margin-top:4px;opacity:.67}.desktop-nav{display:flex;gap:35px;margin:auto;font-size:13px}.desktop-nav a{opacity:.82}.desktop-nav a:hover{opacity:1}.book-header{display:flex;align-items:center;gap:8px;padding:12px 15px;border:1px solid rgba(255,255,255,.5);font-size:12px;transition:.25s}.book-header:hover{background:var(--white);color:var(--ink)}.menu-button,.mobile-menu{display:none}.hero{min-height:100svh;display:grid;grid-template-columns:47% 53%;background:var(--dark)}.hero-copy{position:relative;display:flex;flex-direction:column;justify-content:center;padding:130px clamp(35px,7vw,130px) 70px;color:var(--white)}.eyebrow{margin:0 0 22px;color:var(--tan)}.eyebrow.dark{color:#887765}.eyebrow.light{color:#c5b19d}.hero h1,.manifesto h2,.section-top h2,.gallery h2,.contact h2{margin:0;font-size:clamp(52px,5.6vw,94px);font-weight:400;line-height:1.18;letter-spacing:-.055em}.hero em,.manifesto em,.section-top em,.gallery em,.contact em{font-style:normal;color:#d9c7b5}.hero-text{max-width:390px;margin:30px 0 0;color:rgba(255,255,255,.7);font-size:14px;line-height:2.2;font-weight:300}.hero-link{display:flex;align-items:center;gap:16px;width:max-content;margin-top:38px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.55);font-size:13px}.hero-link span{font:21px var(--font-cormorant)}.hero-year{position:absolute;bottom:39px;font:11px var(--font-cormorant);letter-spacing:.19em;color:rgba(255,255,255,.38)}.hero-image{position:relative;min-height:100svh}.hero-image:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(33,29,26,.22),transparent 40%)}.hero-image img{width:100%;height:100%;position:absolute;object-fit:cover;filter:saturate(.72)}.hero-image-note{position:absolute;z-index:1;left:28px;bottom:33px;color:rgba(255,255,255,.73);font:12px/1.5 var(--font-cormorant);letter-spacing:.2em}.manifesto{min-height:610px;display:grid;grid-template-columns:12% 1.25fr .75fr;gap:50px;align-items:center;width:min(1270px,calc(100% - 64px));margin:auto}.manifesto-number{align-self:start;padding-top:120px;font:15px var(--font-cormorant);color:var(--soft)}.manifesto h2{font-size:clamp(43px,4.7vw,76px);color:var(--ink)}.manifesto h2 em,.section-top h2 em,.gallery h2 em{color:#a98e73}.manifesto-text{max-width:330px;margin:40px 0 0;color:var(--soft);font-size:14px;line-height:2.25;font-weight:300}.services{padding:130px max(32px,calc((100% - 1270px)/2));background:#e8e1d7}.section-top{display:grid;grid-template-columns:1fr .55fr;gap:80px;align-items:end;margin-bottom:70px}.section-top h2,.gallery h2{font-size:clamp(43px,4.8vw,74px)}.section-top>p,.gallery-intro>p:last-child{margin:0;color:var(--soft);font-size:13px;line-height:2.25;font-weight:300}.service-list{border-top:1px solid var(--line)}.service-row{border-bottom:1px solid var(--line)}.service-row button{width:100%;display:grid;grid-template-columns:90px 1fr 32px;align-items:center;padding:28px 0;border:0;background:transparent;color:var(--ink);text-align:right;cursor:pointer}.service-num{font:14px var(--font-cormorant);letter-spacing:.1em;color:var(--soft)}.service-name{font-size:clamp(27px,3vw,43px);font-weight:400;letter-spacing:-.05em}.service-name small{margin-right:15px;color:#a18d78;font:13px var(--font-cormorant);letter-spacing:.16em}.chevron{justify-self:end;transition:transform .3s}.active .chevron{transform:rotate(180deg)}.service-panel{padding:0 90px 35px}.service-panel-inner{display:flex;flex-wrap:wrap;gap:11px 24px;max-width:850px}.service-panel span{font-size:13px;color:#625a53}.service-panel span:before{content:"•";color:var(--tan);margin-left:8px}.gallery{padding:135px max(32px,calc((100% - 1270px)/2));display:grid;grid-template-columns:29% 1fr;gap:70px}.gallery-intro{padding-top:25px}.gallery-intro>p:last-child{margin-top:35px}.gallery-grid{display:grid;grid-template-columns:1.15fr .85fr;grid-template-rows:260px 370px;gap:15px}.photo{position:relative;margin:0;overflow:hidden;background:#ddd}.photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.72);transition:transform .7s,filter .7s}.photo:hover img{transform:scale(1.04);filter:saturate(.95)}.photo-1{grid-row:span 2}.photo-4{grid-column:span 2;height:220px;transform:translateY(0)}.photo figcaption{position:absolute;bottom:14px;right:16px;color:white;font-size:11px;text-shadow:0 1px 10px #000}.contact{display:grid;grid-template-columns:1.05fr .95fr;background:var(--dark);color:var(--white)}.contact-left{padding:125px max(32px,calc((100vw - 1270px)/2)) 125px max(32px,calc((100vw - 1270px)/2));padding-left:clamp(32px,8vw,150px)}.contact h2{font-size:clamp(47px,4.8vw,75px)}.contact p:not(.eyebrow){max-width:380px;margin:27px 0 0;color:rgba(255,255,255,.62);font-size:13px;line-height:2.25;font-weight:300}.booking-button{display:inline-flex;align-items:center;gap:13px;margin-top:35px;padding:17px 20px;background:var(--white);color:var(--ink);font-size:13px;transition:.25s}.booking-button:hover{background:#dbc8b5;transform:translateY(-2px)}.contact-right{align-self:center;border-top:1px solid rgba(255,255,255,.15)}.contact-right>a{min-height:91px;display:grid;grid-template-columns:35px 1fr 23px;align-items:center;gap:15px;padding:0 10px;border-bottom:1px solid rgba(255,255,255,.15);transition:.25s}.contact-right>a:hover{padding-inline:18px 2px;background:rgba(255,255,255,.04)}.contact-right small{display:block;margin-bottom:5px;color:rgba(255,255,255,.38);font:10px var(--font-cormorant);letter-spacing:.16em}.contact-right strong{font-size:14px;font-weight:400}.contact-right .address{padding-top:19px;padding-bottom:19px}.address strong{line-height:2;direction:rtl;display:block}footer{min-height:88px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 max(32px,calc((100% - 1270px)/2));background:#181513;color:rgba(255,255,255,.47);font:10px var(--font-cormorant);letter-spacing:.12em}.footer-brand{display:flex;align-items:center;gap:9px;color:var(--white);font:14px var(--font-vazirmatn);letter-spacing:0}.footer-brand>span{font:19px var(--font-cormorant)}.footer-brand small{color:rgba(255,255,255,.4);font:9px var(--font-cormorant);letter-spacing:.13em}@media(max-width:760px){.header-inner{height:76px;width:calc(100% - 34px)}.desktop-nav,.book-header{display:none}.menu-button{display:grid;place-items:center;margin-right:auto;border:0;background:transparent;color:white}.mobile-menu{position:absolute;top:76px;left:0;width:100%;padding:12px 17px 25px;background:#211d1a;transform:translateY(-15px);opacity:0;visibility:hidden;transition:.25s}.mobile-menu.open{transform:translateY(0);opacity:1;visibility:visible}.mobile-menu a{display:block;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:14px}.mobile-menu .mobile-book{margin-top:15px;border:1px solid rgba(255,255,255,.4);padding:13px 15px}.hero{min-height:730px;grid-template-columns:1fr}.hero-copy{z-index:1;min-height:730px;padding:130px 26px 60px;justify-content:end}.hero-image{position:absolute;inset:0;min-height:0}.hero-image:after{background:linear-gradient(0deg,rgba(20,17,15,.88),rgba(20,17,15,.22) 72%)}.hero-image-note{display:none}.hero h1{font-size:clamp(49px,14vw,67px)}.hero-year{bottom:27px}.manifesto{min-height:0;display:block;width:calc(100% - 42px);padding:85px 0}.manifesto-number{padding:0;margin-bottom:42px}.manifesto h2,.section-top h2,.gallery h2{font-size:clamp(39px,11vw,55px)}.manifesto-text{margin-top:30px}.services{padding:82px 21px}.section-top{display:block;margin-bottom:45px}.section-top>p{margin-top:25px}.service-row button{grid-template-columns:43px 1fr 22px;padding:21px 0}.service-name{font-size:27px}.service-name small{margin-right:10px;font-size:10px}.service-panel{padding:0 43px 25px}.service-panel-inner{gap:9px 16px}.service-panel span{font-size:12px}.gallery{display:block;padding:82px 21px}.gallery-intro{padding:0;margin-bottom:43px}.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:270px 175px 205px;gap:9px}.photo-1{grid-column:span 2;grid-row:auto}.photo-4{grid-column:span 2;height:auto}.contact{grid-template-columns:1fr}.contact-left{padding:82px 21px 65px}.contact h2{font-size:clamp(42px,11vw,55px)}.contact-right{margin:0 21px 70px}.contact-right>a{min-height:80px}.contact-right strong{font-size:13px}footer{min-height:120px;align-items:flex-start;flex-direction:column;padding:25px 21px;font-size:9px}.footer-brand small{display:none}}
-      `}</style>
+            <Link href="#services" className="text-link">
+              کشف خدمات
+              <ArrowUpLeft size={17} />
+            </Link>
+          </div>
+
+          <div className="story-art">
+            <div className="story-art-inner">
+              <span>T</span>
+              <small>BEAUTY</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <section id="services" className="services-section">
+        <div className="shell">
+          <div className="section-heading">
+            <div>
+              <span className="section-number">02 / SERVICES</span>
+              <h2>خدمات</h2>
+            </div>
+
+            <p>
+              مجموعه‌ای از خدمات زیبایی
+              <br />
+              با نگاه دقیق به جزئیات.
+            </p>
+          </div>
+
+          <div className="service-cards">
+            {services.map((service) => {
+              const active = openService === service.id;
+
+              return (
+                <article
+                  className={`service-card ${active ? "active" : ""}`}
+                  key={service.id}
+                >
+                  <button
+                    className="service-trigger"
+                    onClick={() =>
+                      setOpenService(active ? null : service.id)
+                    }
+                    aria-expanded={active}
+                    aria-controls={`service-${service.id}`}
+                  >
+                    <span className="service-number">{service.number}</span>
+
+                    <span className="service-title-wrap">
+                      <strong>{service.title}</strong>
+                      <small>{service.english}</small>
+                    </span>
+
+                    <span className="service-description">
+                      {service.description}
+                    </span>
+
+                    <span className="service-icon">
+                      <ChevronDown size={20} />
+                    </span>
+                  </button>
+
+                  <div
+                    id={`service-${service.id}`}
+                    className="service-details"
+                    hidden={!active}
+                  >
+                    <div className="service-detail-inner">
+                      <ul>
+                        {service.items.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+
+                      <a
+                        href={BOOKING_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        رزرو این خدمت
+                        <ArrowUpLeft size={16} />
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* VISUAL PORTFOLIO */}
+      <section className="portfolio-section">
+        <div className="shell">
+          <div className="section-heading portfolio-heading">
+            <div>
+              <span className="section-number">03 / PORTFOLIO</span>
+              <h2>نمونه‌کارها</h2>
+            </div>
+
+            <Link href="/gallery" className="text-link light-link">
+              مشاهده گالری
+              <ArrowUpLeft size={17} />
+            </Link>
+          </div>
+
+          <div className="portfolio-grid">
+            <div className="portfolio-item portfolio-large">
+              <div className="visual visual-hair">
+                <span>HAIR</span>
+                <strong>01</strong>
+              </div>
+              <div className="portfolio-caption">
+                <span>01</span>
+                <p>HAIR & STYLING</p>
+              </div>
+            </div>
+
+            <div className="portfolio-item portfolio-small">
+              <div className="visual visual-nails">
+                <span>NAILS</span>
+                <strong>02</strong>
+              </div>
+              <div className="portfolio-caption">
+                <span>02</span>
+                <p>NAILS</p>
+              </div>
+            </div>
+
+            <div className="portfolio-item portfolio-medium">
+              <div className="visual visual-face">
+                <span>FACE</span>
+                <strong>03</strong>
+              </div>
+              <div className="portfolio-caption">
+                <span>03</span>
+                <p>FACE & MAKEUP</p>
+              </div>
+            </div>
+
+            <div className="portfolio-item portfolio-small">
+              <div className="visual visual-lashes">
+                <span>LASHES</span>
+                <strong>04</strong>
+              </div>
+              <div className="portfolio-caption">
+                <span>04</span>
+                <p>LASHES</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PHILOSOPHY */}
+      <section className="philosophy-section">
+        <div className="shell">
+          <div className="philosophy-top">
+            <span className="section-number">04 / PHILOSOPHY</span>
+
+            <h2>
+              Less noise.
+              <br />
+              More <em>you.</em>
+            </h2>
+          </div>
+
+          <div className="philosophy-grid">
+            <div className="philosophy-item">
+              <span>01</span>
+              <h3>شخصی‌سازی</h3>
+              <p>
+                هر انتخاب با توجه به فرم، سبک و خواسته‌ی شخصی شما انجام می‌شود.
+              </p>
+            </div>
+
+            <div className="philosophy-item">
+              <span>02</span>
+              <h3>دقت</h3>
+              <p>
+                زیبایی در جزئیات شکل می‌گیرد؛ از کوچک‌ترین انتخاب تا اجرای نهایی.
+              </p>
+            </div>
+
+            <div className="philosophy-item">
+              <span>03</span>
+              <h3>آرامش</h3>
+              <p>
+                فضایی برای فاصله گرفتن از شلوغی روزمره و تمرکز روی خودتان.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section id="contact" className="contact-section">
+        <div className="shell">
+          <div className="contact-top">
+            <span className="section-number">05 / VISIT TANAZ</span>
+
+            <h2>
+              وقتِ
+              <br />
+              <em>خودتان</em> است.
+            </h2>
+
+            <a
+              href={BOOKING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="contact-book"
+            >
+              رزرو نوبت
+              <ArrowUpLeft size={19} />
+            </a>
+          </div>
+
+          <div className="contact-list">
+            <a href={`tel:${CONTACT.phone}`}>
+              <span className="contact-icon">
+                <Phone size={18} />
+              </span>
+
+              <span className="contact-info">
+                <small>PHONE</small>
+                <strong dir="ltr">031 365 18167</strong>
+              </span>
+
+              <ArrowUpLeft size={17} />
+            </a>
+
+            <a href={`tel:${CONTACT.mobile}`}>
+              <span className="contact-icon">
+                <MessageCircle size={18} />
+              </span>
+
+              <span className="contact-info">
+                <small>MOBILE</small>
+                <strong dir="ltr">0930 798 4291</strong>
+              </span>
+
+              <ArrowUpLeft size={17} />
+            </a>
+
+            <a
+              href={CONTACT.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="contact-icon">
+                <Instagram size={18} />
+              </span>
+
+              <span className="contact-info">
+                <small>INSTAGRAM</small>
+                <strong dir="ltr">@tanazz.beauty</strong>
+              </span>
+
+              <ArrowUpLeft size={17} />
+            </a>
+
+            <a
+              href={CONTACT.map}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span className="contact-icon">
+                <MapPin size={18} />
+              </span>
+
+              <span className="contact-info">
+                <small>ADDRESS</small>
+                <strong>
+                  سپاهان‌شهر، بلوار غدیر
+                  <br />
+                  مجتمع عقیق ۵، طبقه زیرین، پلاک ۲۲
+                </strong>
+              </span>
+
+              <ArrowUpLeft size={17} />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="luxury-footer">
+        <div className="shell footer-inner">
+          <Link href="#home" className="footer-brand">
+            <strong>طناز</strong>
+            <span>BEAUTY SALON · ISFAHAN</span>
+          </Link>
+
+          <span className="footer-copy">
+            © {new Date().getFullYear()} TANAZ BEAUTY SALON
+          </span>
+
+          <Link href="#home" className="footer-top">
+            بازگشت به بالا
+            <span>↑</span>
+          </Link>
+        </div>
+      </footer>
+
+      {/* MOBILE CTA */}
+      <a
+        className="mobile-booking"
+        href={BOOKING_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        رزرو نوبت
+        <ArrowUpLeft size={18} />
+      </a>
     </main>
   );
 }
