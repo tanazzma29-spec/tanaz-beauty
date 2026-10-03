@@ -135,7 +135,7 @@ export default function Home() {
             className="brand"
             onClick={close}
           >
-            <span>طناز</span>
+            <span>سالن زیبایی طناز</span>
           </Link>
 
           <nav
@@ -271,9 +271,9 @@ export default function Home() {
             </p>
 
             <h2>
-              برای چهرهٔ تو،
+              زیبایی تو،
               <br />
-              <em>نه تقلید از یک الگو.</em>
+              <em>آغاز یک حس خوب است.</em>
             </h2>
 
             <p>
